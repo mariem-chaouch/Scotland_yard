@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
 RUN chsh -s /bin/bash $USERNAME
 USER $USERNAME
 WORKDIR /app
-COPY --exclude=build --exclude=cmake-build-debug --chown=$USERNAME:$USERNAME . /app
+COPY --exclude=build --exclude=cmake-build-debug --exclude=docker-build --chown=$USERNAME:$USERNAME . /app
 
 # Set environment variables for GUI support
 RUN [ -z "$WAYLAND_DISPLAY" ] && echo 'export DISPLAY='"$DISPLAY" >> ~/.bashrc && export DISPLAY=$DISPLAY || echo 'export WAYLAND_DISPLAY='"$WAYLAND_DISPLAY" >> /home/plt/.bashrc && export WAYLAND_DISPLAY=$WAYLAND_DISPLAY 
