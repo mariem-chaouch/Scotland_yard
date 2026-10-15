@@ -53,12 +53,11 @@ if(BUILD_CODE_COVERAGE)
     "${PROJECT_SOURCE_DIR}/test/*"
     "${PROJECT_SOURCE_DIR}/extern/*"
   )
+message(STATUS "exluded path for coverage: ${COVER_GCOVR_EXCLUDES}")
 
-  message(STATUS "exluded path for coverage: ${COVER_GCOVR_EXCLUDES}")
-
-  # Create script to run tests for code coverage
-  set(test_runner "${CMAKE_CURRENT_BINARY_DIR}/run_test.sh")
-  file(CONFIGURE
+# Create script to run tests for code coverage
+set(test_runner "${CMAKE_CURRENT_BINARY_DIR}/run_test.sh")
+file(CONFIGURE
           OUTPUT ${test_runner}
           CONTENT
           "#!/bin/sh\n\
@@ -67,7 +66,7 @@ ${CMAKE_COMMAND} -E copy \"${CMAKE_CURRENT_BINARY_DIR}/DartConfiguration.tcl\" \
 ${CMAKE_CTEST_COMMAND} -j --output-on-failure --timeout 300 \
 --test-dir \"${CMAKE_CURRENT_BINARY_DIR}/test\" || /bin/true\n"
           )
-  file(CHMOD ${test_runner} PERMISSIONS
+file(CHMOD ${test_runner} PERMISSIONS
     OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
   # Create target for code coverage
