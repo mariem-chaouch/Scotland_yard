@@ -392,6 +392,13 @@ is_typedef_stereo (char *stereo)
 }
 
 int
+is_using_stereo (char *stereo)
+{
+    return (!strcasecmp(stereo, "using") ||
+            !strcasecmp (stereo, "alias"));
+}
+
+int
 is_const_stereo (char *stereo)
 {
     return (!strcasecmp(stereo, "const") ||

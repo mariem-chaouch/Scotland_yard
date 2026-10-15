@@ -785,31 +785,37 @@ gen_decl(declaration *d)
         indentlevel--;
         print("};\n\n");
     }
-    else if (is_typedef_stereo(stype))
+    else if (is_typedef_stereo(stype) || is_using_stereo(stype))
     {
-        /* Conventions for CORBATypedef:
+        /* Conventions for CORBATypedef / using-alias:
            The first (and only) attribute contains the following:
            Name:   Empty - the name is taken from the class.
-           Type:   Name of the original type which is typedefed.
-           Value:  Optionally contains array dimension(s) of the typedef.
+           Type:   Name of the original type which is aliased.
+           Value:  Optionally contains array dimension(s) of the alias.
                    These dimensions are given in square brackets, e.g.
                    [3][10]
          */
         if (umla == NULL)
         {
             fprintf(stderr, "Error: first attribute (impl type) not set "
-                            "at typedef %s\n",
+                            "at typedef/using %s\n",
                     name);
             exit(1);
         }
         if (strlen(umla->key.name) > 0)
         {
-            fprintf(stderr, "Warning: typedef %s: ignoring name field "
+            fprintf(stderr, "Warning: typedef/using %s: ignoring name field "
                             "in implementation type attribute\n",
                     name);
         }
-        print("typedef %s %s%s;\n\n", cppname(umla->key.type), name,
-              umla->key.value);
+        if (is_using_stereo(stype))
+            /* Array dimensions bind to the aliased type, e.g.
+               "using Name = int[3][10];" */
+            print("using %s = %s%s;\n\n", name, cppname(umla->key.type),
+                  umla->key.value);
+        else
+            print("typedef %s %s%s;\n\n", cppname(umla->key.type), name,
+                  umla->key.value);
     }
     else
     {
