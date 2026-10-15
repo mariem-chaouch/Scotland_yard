@@ -1,4 +1,4 @@
-#include "Example.h"
+/*#include "Example.h"
 
 #include <cstdlib>
 
@@ -30,3 +30,4 @@ namespace state {
         this->b = &b;
     }
 }
+*/

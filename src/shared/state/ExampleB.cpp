@@ -1,4 +1,4 @@
-#include "ExampleB.h"
+/*#include "ExampleB.h"
 
 namespace state {
 
@@ -9,3 +9,4 @@ namespace state {
     ExampleB::ExampleB() = default;
 
 }
+*/

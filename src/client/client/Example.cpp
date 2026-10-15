@@ -1,4 +1,4 @@
-#include <state/Example.h>  // Included from library shared_static
+/*#include <state/Example.h>  // Included from library shared_static
 #include "Example.h"
 
 namespace client {
@@ -12,3 +12,4 @@ void Example::setY (int y) {
 
 }
 
+*/
