@@ -1,4 +1,4 @@
-#include "ExampleA.h"
+/*#include "ExampleA.h"
 
 #include <iostream>
 
@@ -42,3 +42,4 @@ namespace state {
     }
 
 }
+*/
