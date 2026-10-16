@@ -2,6 +2,7 @@
 
 // The following lines are here to check that SFML is installed and working
 #include <SFML/Graphics.hpp>
+
 // LCOV_EXCL_START
 void testSFML() {
     sf::Texture texture;
@@ -14,12 +15,8 @@ using namespace std;
 using namespace state;
 
 int main(int argc,char* argv[])
-{/*
-    Example example;
-    ExampleA exampleA;
-    exampleA.setX(53);
-    example.setA(exampleA);*/
-
+{
+    Board board;
     cout << "It works !" << endl;
 
     return 0;
