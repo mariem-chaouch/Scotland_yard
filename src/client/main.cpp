@@ -17,6 +17,13 @@ using namespace state;
 int main(int argc,char* argv[])
 {
     Board board;
+
+    for (auto neighbor : board.getNeighbors(77))
+    {
+        cout << neighbor << endl;
+    }
+    cout << board.areConnected(77,79) << endl;
+    cout << board.getStation(78).getId() << endl;
     cout << "It works !" << endl;
 
     return 0;

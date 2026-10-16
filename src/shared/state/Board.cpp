@@ -2,9 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "Graph.h"
 #include "Board.h"
 #include "Station.h"
+#include "Vertex.h"
 #include "Connection.h"
 #include <stdexcept>
 #include <boost//graph/adjacency_list.hpp>
@@ -67,7 +67,7 @@ Board::Board ( )
 
     graph_file.close();
 }
-/*
+
 std::vector<int> Board::getNeighbors (int stationId)
 {
     auto it = stationVertices.find(stationId);
@@ -87,7 +87,7 @@ std::vector<int> Board::getNeighbors (int stationId)
     }
 
     return neighbors;
-}*/
+}
 
 void Board::addStation (Station station)
 {
@@ -114,7 +114,6 @@ void Board::addConnection (int station1Id, int station2Id, Connection connection
     boost::add_edge(it1->second, it2->second, connection, graph);
 }
 
-/*
 bool Board::areConnected (int station1Id, int station2Id)
 {
     auto it1 = stationVertices.find(station1Id);
@@ -129,6 +128,7 @@ bool Board::areConnected (int station1Id, int station2Id)
 
     return result.second;
 }
+
 Station& Board::getStation (int stationId)
 {
     auto it = stationVertices.find(stationId);
@@ -138,4 +138,4 @@ Station& Board::getStation (int stationId)
         throw std::invalid_argument("Station does not exist");
     }
     return graph[it->second];
-}*/
+}
