@@ -7,8 +7,9 @@
 
 state::Connection::Connection(Transport mean): mean (mean) {
     std::cout << "--- Constructeur Connection ---" << std::endl;
+    std::cout << mean << std::endl;
 }
 
-state::Transport state::Connection::getTransport() {
+state::Transport state::Connection::getTransport() const{
     return mean;
 }
