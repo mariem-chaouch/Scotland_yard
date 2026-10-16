@@ -1,7 +1,21 @@
 #include "Turn.h"
 
-state::Turn::Turn ()
-{
-    number = turn_count;
-    turn_count++;
+namespace state {
+
+    int Turn::turn_count = 0;
+
+    Turn::Turn(): number(turn_count++)
+    {
+    }
+
+    std::vector<Move> Turn::getMoves()
+    {
+        return moves;
+    }
+
+    int Turn::getNumber()
+    {
+        return number;
+    }
+
 }
