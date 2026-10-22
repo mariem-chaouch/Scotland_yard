@@ -13,10 +13,10 @@ using namespace state;
 
 Board::Board ( )
 {
-    std::ifstream pos_file("../resources/pos.txt");
+    std::ifstream pos_file(std::string(RESOURCE_DIR) + "/pos.txt");
 
     if (!pos_file.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
+        throw std::runtime_error("Cannot open ../resources/pos.txt");
     }
 
     int station_nbr, id, x, y;
@@ -35,10 +35,10 @@ Board::Board ( )
     std::string mean;
     Transport transport;
 
-    std::ifstream graph_file("../resources/graph.txt");
+    std::ifstream graph_file(std::string(RESOURCE_DIR) + "/graph.txt");
 
     if (!graph_file.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
+        throw std::runtime_error("Cannot open ../resources/graph.txt");
     }
 
     graph_file >> station_nbr;
