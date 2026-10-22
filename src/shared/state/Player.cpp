@@ -1,11 +1,9 @@
-//
-// Created by eya on 10/20/26.
-//
+
 #include "Player.h"
 
 namespace state {
 
-    Player::Player(std::string color) : color(color), current_station_id(0) {}
+    Player::Player(std::string color) : color(color), currentStationId(0) {}
 
     Player::~Player() {}
 
@@ -14,13 +12,12 @@ namespace state {
     }
 
     int Player::getCurrentStationId() {
-        return current_station_id;
+        return currentStationId;
     }
 
-    // Applique un déplacement.
     bool Player::makeMove(int destinationId, Ticket ticket) {
-        useTransportTicket(ticket);       
-        current_station_id = destinationId;
+        useTransportTicket(ticket);          // appelle la version de MrX ou de Detective
+        currentStationId = destinationId;
         return true;
     }
 
@@ -29,17 +26,13 @@ namespace state {
         (void)ticket;
     }
 
-    // Getters / setters générés par dia2code
+    // Setters générés par dia2code
     void Player::setColor(const std::string& color) {
         this->color = color;
     }
 
-    int Player::getCurrent_station_id() const {
-        return current_station_id;
-    }
-
-    void Player::setCurrent_station_id(int current_station_id) {
-        this->current_station_id = current_station_id;
+    void Player::setCurrentStationId(int currentStationId) {
+        this->currentStationId = currentStationId;
     }
 
 }
