@@ -25,12 +25,18 @@ const state::Board & state::Game::getBoard() const{
 std::vector<state::Turn> state::Game::getTurns() const{
     return turns;
 }
-//TODO : Remplacer les constructeurs Player par MrX et Detective
-state::Game::Game() : current_player(players.front()) {
+
+std::vector<state::Player*> state::Game::getPlayers() const{
+    return players;
+}
+
+state::Game::Game() {
     std::cout << "--- Constructeur Game ---" << std::endl;
-    players.push_back(*new Player("white"));
-    players.push_back(*new Player("blue"));
-    players.push_back(*new Player("red"));
-    players.push_back(*new Player("green"));
+    players.push_back(new Player("white"));
+    players.push_back(new Player("blue"));
+    players.push_back(new Player("red"));
+    players.push_back(new Player("green"));
+    players.push_back(new Player("yellow"));
+    current_player = players.front();
 }
 
