@@ -20,9 +20,9 @@ BOOST_AUTO_TEST_CASE(TestPlayerSetters)
 {
   Detective d("rouge");
   d.setColor("bleu");
-  d.setCurrent_station_id(13);
+  d.setCurrentStationId(13);
   BOOST_CHECK_EQUAL(d.getColor(), "bleu");
-  BOOST_CHECK_EQUAL(d.getCurrent_station_id(), 13);
+  BOOST_CHECK_EQUAL(d.getCurrentStationId(), 13);
   BOOST_CHECK_EQUAL(d.getCurrentStationId(), 13);
 }
 
