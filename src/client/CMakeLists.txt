@@ -30,7 +30,8 @@ target_compile_options(${lib_client_target} PUBLIC
   -Wall -Wextra 
 )
 # Compile "client" executable
-add_executable(${client_target} main.cpp)
+add_executable(${client_target} main.cpp
+        )
 target_link_libraries(${client_target} PUBLIC 
   ${lib_client_target}
 )
