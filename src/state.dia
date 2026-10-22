@@ -607,7 +607,7 @@
         <dia:point val="31.9439,23.1961"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="31.0939,23.1461;41.1335,27.1463"/>
+        <dia:rectangle val="31.0939,23.1461;41.1334,27.1463"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -1590,7 +1590,7 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="0.52906,-6.00965"/>
-        <dia:point val="0.529061,4.00855"/>
+        <dia:point val="0.52906,4.00855"/>
         <dia:point val="7.2175,4.00855"/>
         <dia:point val="7.2175,11.0595"/>
       </dia:attribute>
@@ -1670,7 +1670,7 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="0.52906,-6.00921"/>
-        <dia:point val="0.529061,4"/>
+        <dia:point val="0.52906,4"/>
         <dia:point val="-7.59,4"/>
         <dia:point val="-7.59,11"/>
       </dia:attribute>
@@ -2019,7 +2019,7 @@
         <dia:point val="24,2.3"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="10.3541,-8.2795;24.75,3.05"/>
+        <dia:rectangle val="10.3541,-8.1195;24.75,3.14"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -2276,7 +2276,7 @@
             <dia:string>#players#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#std::vector&lt;Player&gt;#</dia:string>
+            <dia:string>#std::vector&lt;Player*&gt;#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -2299,7 +2299,7 @@
             <dia:string>#current_player#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#Player#</dia:string>
+            <dia:string>#Player*#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -3203,7 +3203,7 @@
         <dia:point val="39.9505,3.7"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="39.2005,2.76905;47.2644,4.45"/>
+        <dia:rectangle val="39.2005,2.92905;47.2644,4.54"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -4522,13 +4522,13 @@
         <dia:point val="46.7027,-31"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="46.6527,-31.05;52.8077,-28.75"/>
+        <dia:rectangle val="46.6527,-31.05;53.5727,-28.75"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="46.7027,-31"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="6.0549999999999997"/>
+        <dia:real val="6.8200000000000003"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="2.1999999999999997"/>
@@ -4774,7 +4774,7 @@
         <dia:point val="49.7675,-18"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="49.2802,-29.2;50.1802,-17.95"/>
+        <dia:rectangle val="49.6265,-29.2102;50.5467,-17.95"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -4782,8 +4782,8 @@
       <dia:attribute name="orth_points">
         <dia:point val="49.7675,-18"/>
         <dia:point val="49.7675,-25.5"/>
-        <dia:point val="49.7302,-25.5"/>
-        <dia:point val="49.7302,-28.75"/>
+        <dia:point val="50.0127,-25.5"/>
+        <dia:point val="50.0866,-28.75"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
@@ -5342,7 +5342,7 @@
         <dia:point val="10.4544,-10.5595"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="10.4044,-11.4634;15.0376,-9.86335"/>
+        <dia:rectangle val="10.4044,-11.3034;15.0376,-9.70335"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
