@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.18)
 project(plt)
 
+# Shared resource directory (independent of the working directory)
+add_compile_definitions(
+  RESOURCE_DIR="${PROJECT_SOURCE_DIR}/resources"
+)
+
 # CMP0074 policy enable find_* to use <PackageName>_ROOT variables to find
 # packages.
 if(POLICY CMP0074)
