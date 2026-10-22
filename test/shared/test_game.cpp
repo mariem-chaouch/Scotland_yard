@@ -13,11 +13,6 @@
 
 using namespace ::state;
 
-BOOST_AUTO_TEST_CASE(TestStaticAssert)
-{
-    BOOST_CHECK(1);
-}
-
 BOOST_AUTO_TEST_CASE(TestGameSingleton)
 {
     Game* g1 = Game::getInstance();
