@@ -18,6 +18,7 @@ target_include_directories(${lib_shared_target} PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${jsoncpp_include_dir}
   )
-
+target_include_directories(${lib_shared_target} PUBLIC ${Boost_INCLUDE_DIRS})
+target_compile_options(${lib_shared_target} PUBLIC -include boost/graph/adjacency_list.hpp)
 # vim: set sw=2 sts=2 et:
 

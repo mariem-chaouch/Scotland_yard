@@ -9,6 +9,11 @@ state::Station::Station(int id, Point position): id(id), position(position) {
     taken = false;
 }
 
+state::Station::Station()
+    : id(0), position({.x = 0, .y = 0}), taken(false)
+{
+}
+
 int state::Station::getId() const{
     return id;
 }
