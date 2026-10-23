@@ -18,13 +18,9 @@ namespace state {
     }
 
     void Detective::useTransportTicket(Ticket ticket) {
-        if (!hasTicket(ticket)) return;
-        switch (ticket) {
-            case TaxiTicket:  nb_taxi--;  break;
-            case BusTicket:   nb_bus--;   break;
-            case TrainTicket: nb_train--; break;
-            default: break;
-        }
+        if (ticket == TaxiTicket && nb_taxi > 0)        nb_taxi--;
+        else if (ticket == BusTicket && nb_bus > 0)     nb_bus--;
+        else if (ticket == TrainTicket && nb_train > 0) nb_train--;
     }
 
 }
