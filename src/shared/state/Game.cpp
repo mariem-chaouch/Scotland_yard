@@ -10,6 +10,12 @@
 state::Game* state::Game::instance = nullptr;
 std::mutex state::Game::mutex;
 
+state::Game::~Game() {
+    for (Player* p : players) {
+        delete p;
+    }
+}
+
 state::Game * state::Game::getInstance() {
     std::lock_guard<std::mutex> lock(mutex);
     if (instance == nullptr) {
@@ -28,6 +34,12 @@ std::vector<state::Turn> state::Game::getTurns() const{
 
 std::vector<state::Player*> state::Game::getPlayers() const{
     return players;
+}
+
+void state::Game::destroyInstance() {
+    std::lock_guard<std::mutex> lock(mutex);
+    delete instance;
+    instance = nullptr;
 }
 
 state::Game::Game() {

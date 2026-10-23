@@ -110,3 +110,20 @@ BOOST_AUTO_TEST_CASE(TestPolymorphismThroughPlayerPointer)
   BOOST_REQUIRE(x != nullptr);
   BOOST_CHECK(!x->hasBlackTicket());        // prouve que MrX::useTransportTicket a été appelé
 }
+BOOST_AUTO_TEST_CASE(TestPlayerBaseUseTicket)
+{
+  Player p("blanc");
+  BOOST_CHECK(p.makeMove(5, TaxiTicket));   // appelle Player::useTransportTicket
+  BOOST_CHECK_EQUAL(p.getCurrentStationId(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(TestDetectiveBusAndBlackTickets)
+{
+  Detective d("vert");
+  for (int i = 0; i < 8; i++) d.useTransportTicket(BusTicket);   // 8 tickets bus au départ
+  BOOST_CHECK(!d.hasTicket(BusTicket));
+
+  d.useTransportTicket(BlackTicket);       // un détective ne peut pas l'utiliser : rien ne change
+  BOOST_CHECK(d.hasTicket(TaxiTicket));
+  BOOST_CHECK(d.hasTicket(TrainTicket));
+}
