@@ -2668,7 +2668,7 @@
             <dia:boolean val="false"/>
           </dia:attribute>
           <dia:attribute name="class_scope">
-            <dia:boolean val="false"/>
+            <dia:boolean val="true"/>
           </dia:attribute>
           <dia:attribute name="parameters"/>
         </dia:composite>
@@ -4984,7 +4984,7 @@
         <dia:point val="49.7675,-18"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="49.6621,-29.2002;50.5624,-17.95"/>
+        <dia:rectangle val="49.6625,-29.2001;50.5626,-17.95"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -4992,8 +4992,8 @@
       <dia:attribute name="orth_points">
         <dia:point val="49.7675,-18"/>
         <dia:point val="49.7675,-25.5"/>
-        <dia:point val="50.1109,-25.5"/>
-        <dia:point val="50.1122,-28.75"/>
+        <dia:point val="50.1122,-25.5"/>
+        <dia:point val="50.1126,-28.75"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>

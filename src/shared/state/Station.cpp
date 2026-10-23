@@ -14,6 +14,8 @@ state::Station::Station()
 {
 }
 
+state::Station::~Station() = default;
+
 int state::Station::getId() const{
     return id;
 }

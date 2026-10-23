@@ -22,6 +22,5 @@ namespace state {
     {
         return ticket;
     }
-   
 
 }
