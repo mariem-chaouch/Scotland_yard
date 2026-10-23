@@ -36,3 +36,22 @@ BOOST_AUTO_TEST_CASE(TestGameTurns)
     Game* g = Game::getInstance();
     BOOST_CHECK_EQUAL(g->getTurns().size(), 0);   // aucun tour au départ
 }
+
+BOOST_AUTO_TEST_CASE(TestGamePlayers)
+{
+    Game* g = Game::getInstance();
+    std::vector<Player*> players = g->getPlayers();
+
+    BOOST_REQUIRE_EQUAL(players.size(), 5);
+    BOOST_CHECK_EQUAL(players[0]->getColor(), "white");
+    BOOST_CHECK_EQUAL(players[4]->getColor(), "yellow");
+}
+
+BOOST_AUTO_TEST_CASE(TestGameDestroy)
+{
+    Game* g1 = Game::getInstance();
+    Game::destroyInstance();
+    Game* g2 = Game::getInstance();   // recréée
+    BOOST_CHECK(g2 != nullptr);
+    BOOST_CHECK_EQUAL(g2->getPlayers().size(), 5);
+}
