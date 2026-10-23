@@ -14,6 +14,9 @@ state::Station::Station()
 {
 }
 
+state::Station::~Station() {
+}
+
 int state::Station::getId() const{
     return id;
 }
