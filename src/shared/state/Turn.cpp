@@ -19,6 +19,5 @@ namespace state {
     {
         return number;
     }
-    Turn::~Turn(){}
 
 }
