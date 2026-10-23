@@ -8,6 +8,8 @@ namespace state {
     {
     }
 
+    Turn::~Turn() = default;
+
     std::vector<Move> Turn::getMoves()
     {
         return moves;

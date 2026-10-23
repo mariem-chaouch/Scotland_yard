@@ -68,6 +68,8 @@ Board::Board ( )
     graph_file.close();
 }
 
+Board::~Board() = default;
+
 std::vector<int> Board::getNeighbors (int stationId)
 {
     auto it = stationVertices.find(stationId);

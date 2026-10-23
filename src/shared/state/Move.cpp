@@ -7,6 +7,9 @@ namespace state {
         this->ticket = ticket;
         this->player = player;
     }
+
+    Move::~Move() = default;
+
     int Move::getDestination ()
     {
         return destinationStationId;
