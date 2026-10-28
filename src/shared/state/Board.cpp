@@ -82,10 +82,10 @@ std::vector<int> Board::getNeighbors (int stationId)
 
     std::vector<int> neighbors;
 
-    auto range = boost::adjacent_vertices(vertex, graph);
+    auto range = boost::adjacent_vertices(vertex, transportMap);
 
     for (auto iter = range.first; iter != range.second; ++iter) {
-        neighbors.push_back(graph[*iter].getId());
+        neighbors.push_back(transportMap[*iter].getId());
     }
 
     return neighbors;
@@ -99,7 +99,7 @@ void Board::addStation (Station station)
         throw std::invalid_argument("Station ID already exists");
     }
 
-    Vertex vertex = boost::add_vertex(station, graph);
+    Vertex vertex = boost::add_vertex(station, transportMap);
 
     stationVertices[id] = vertex;
 }
@@ -113,7 +113,7 @@ void Board::addConnection (int station1Id, int station2Id, Connection connection
         throw std::invalid_argument("Station does not exist");
         }
 
-    boost::add_edge(it1->second, it2->second, connection, graph);
+    boost::add_edge(it1->second, it2->second, connection, transportMap);
 }
 
 bool Board::areConnected (int station1Id, int station2Id)
@@ -126,7 +126,7 @@ bool Board::areConnected (int station1Id, int station2Id)
         return false;
         }
 
-    auto result = boost::edge(it1->second, it2->second, graph);
+    auto result = boost::edge(it1->second, it2->second, transportMap);
 
     return result.second;
 }
@@ -139,5 +139,5 @@ Station& Board::getStation (int stationId)
     {
         throw std::invalid_argument("Station does not exist");
     }
-    return graph[it->second];
+    return transportMap[it->second];
 }
