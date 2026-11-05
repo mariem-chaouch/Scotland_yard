@@ -16,17 +16,17 @@ namespace state {
     }
 
     bool Player::makeMove(int destinationId, Ticket ticket) {
-        useTransportTicket(ticket);          // appelle la version de MrX ou de Detective
         currentStationId = destinationId;
+        useTransportTicket(ticket);
         return true;
     }
 
-    // Version de base : ne fait rien. MrX et Detective la redéfinissent.
+
     void Player::useTransportTicket(Ticket ticket) {
         (void)ticket;
     }
 
-    // Setters générés par dia2code
+
     void Player::setColor(const std::string& color) {
         this->color = color;
     }
