@@ -10,6 +10,8 @@ state::Connection::Connection(Transport mean): mean (mean) {
     std::cout << mean << std::endl;
 }
 
+state::Connection::~Connection() = default;
+
 state::Transport state::Connection::getTransport() const{
     return mean;
 }
