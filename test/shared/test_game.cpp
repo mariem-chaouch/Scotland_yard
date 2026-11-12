@@ -7,7 +7,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "../../src/shared/state/Game.h"
+#include "../../src/shared/state/GameState.h"
 #include "../../src/shared/state/MrX.h"
 #include "../../src/shared/state/Detective.h"
 
@@ -15,13 +15,13 @@ using namespace ::state;
 
 BOOST_AUTO_TEST_CASE(TestGameConstructor)
 {
-    Game g;
+    GameState g;
     BOOST_CHECK_EQUAL(g.getTurn(), 0);   // 0 = placement initial
 }
 
 BOOST_AUTO_TEST_CASE(TestGameBoard)
 {
-    Game g;
+    GameState g;
     const Board& b1 = g.getBoard();
     const Board& b2 = g.getBoard();
     BOOST_CHECK_EQUAL(&b1, &b2);   // même Board renvoyé par référence
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(TestGameBoard)
 
 BOOST_AUTO_TEST_CASE(TestGamePlayers)
 {
-    Game g;
+    GameState g;
     std::vector<Player*> players = g.getPlayers();
 
     BOOST_REQUIRE_EQUAL(players.size(), 5);
@@ -46,9 +46,9 @@ BOOST_AUTO_TEST_CASE(TestGameDestructor)
 {
     // Le destructeur est exécuté en sortie de portée (delete des joueurs)
     {
-        Game g;
+        GameState g;
     }
-    Game* g = new Game();
+    GameState* g = new GameState();
     delete g;
     BOOST_CHECK(true);
 }
