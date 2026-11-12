@@ -15,7 +15,10 @@ add_library(${lib_shared_target} STATIC ${shared_sources} ${jsoncpp_sources}
         state/GameState.cpp
         engine/DoubleMoveCommand.cpp
         engine/PassCommand.cpp
-        engine/MoveCommand.cpp)
+        engine/MoveCommand.cpp
+        state/GameState.cpp
+        engine/Engine.cpp
+        engine/Rules.cpp)
 add_dependencies(${lib_shared_target} generate-headers)
 target_include_directories(${lib_shared_target} PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
