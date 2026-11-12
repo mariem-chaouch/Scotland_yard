@@ -70,7 +70,7 @@ Board::Board ( )
 
 Board::~Board () = default;
 
-std::vector<int> Board::getNeighbors (int stationId)
+std::vector<int> Board::getNeighbors (int stationId) const
 {
     auto it = stationVertices.find(stationId);
 
@@ -116,7 +116,7 @@ void Board::addConnection (int station1Id, int station2Id, Connection connection
     boost::add_edge(it1->second, it2->second, connection, transportMap);
 }
 
-bool Board::areConnected (int station1Id, int station2Id)
+bool Board::areConnected (int station1Id, int station2Id) const
 {
     auto it1 = stationVertices.find(station1Id);
     auto it2 = stationVertices.find(station2Id);
