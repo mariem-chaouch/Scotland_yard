@@ -10,13 +10,15 @@ void testSFML() {
 // end of test SFML
 
 #include <state.h>
+#include "render.h"
 
 using namespace std;
 using namespace state;
+using namespace render;
 
 int main(int argc,char* argv[])
 {
-    Board board;
+    /*Board board;
 
     for (auto neighbor : board.getNeighbors(77))
     {
@@ -24,7 +26,13 @@ int main(int argc,char* argv[])
     }
     cout << board.areConnected(77,79) << endl;
     cout << board.getStation(78).getId() << endl;
-    cout << "It works !" << endl;
+    cout << "It works !" << endl;*/
+
+    GameState gameState;
+
+    Scene scene(gameState);
+    scene.runScene();
+
 
     return 0;
 }
