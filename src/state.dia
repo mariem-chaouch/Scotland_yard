@@ -2113,7 +2113,7 @@
       <dia:attribute name="operations">
         <dia:composite type="umloperation">
           <dia:attribute name="name">
-            <dia:string>#Game#</dia:string>
+            <dia:string>#GameState#</dia:string>
           </dia:attribute>
           <dia:attribute name="stereotype">
             <dia:string>##</dia:string>
@@ -2143,7 +2143,7 @@
         </dia:composite>
         <dia:composite type="umloperation">
           <dia:attribute name="name">
-            <dia:string>#~Game#</dia:string>
+            <dia:string>#~GameState#</dia:string>
           </dia:attribute>
           <dia:attribute name="stereotype">
             <dia:string>##</dia:string>
@@ -3816,7 +3816,7 @@
         <dia:point val="-14.2325,-21"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-15.0072,-28.1099;-14.0879,-20.95"/>
+        <dia:rectangle val="-15.0186,-28.1028;-14.1136,-20.95"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3824,8 +3824,8 @@
       <dia:attribute name="orth_points">
         <dia:point val="-14.2325,-21"/>
         <dia:point val="-14.2325,-24.3"/>
-        <dia:point val="-14.4748,-24.3"/>
-        <dia:point val="-14.5475,-27.6503"/>
+        <dia:point val="-14.5475,-24.3"/>
+        <dia:point val="-14.5661,-27.6503"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
