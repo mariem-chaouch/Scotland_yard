@@ -141,3 +141,17 @@ Station& Board::getStation (int stationId)
     }
     return transportMap[it->second];
 }
+std::vector<Transport> Board::getTransportsBetween(int station1Id, int station2Id) const {
+    std::vector<Transport> result;
+    auto it1 = stationVertices.find(station1Id);
+    auto it2 = stationVertices.find(station2Id);
+    if (it1 == stationVertices.end() || it2 == stationVertices.end())
+        return result;                                  // station inconnue : aucune liaison
+
+    auto edges = boost::out_edges(it1->second, transportMap);
+    for (auto e = edges.first; e != edges.second; ++e) {
+        if (boost::target(*e, transportMap) == it2->second)
+            result.push_back(transportMap[*e].getTransport());
+    }
+    return result;
+}
