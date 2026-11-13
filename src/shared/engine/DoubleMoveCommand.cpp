@@ -3,20 +3,14 @@
 //
 #include "DoubleMoveCommand.h"
 #include "Engine.h"
+#include "Rules.h"
 #include "state/MrX.h"
 
-namespace {
-    // Un coup est légal si les stations sont reliées
-    // TODO: vérifier aussi la compatibilité transport/ticket (canTravel)
-    bool isMoveLegal(const state::Board& board, int from, int to) {
-        return board.areConnected(from, to);
-    }
-}
-
+// Les deux MoveCommand sont créées à partir des paramètres
 engine::DoubleMoveCommand::DoubleMoveCommand(int playerId, int firstDestination, state::Ticket firstTicket,
     int secondDestination, state::Ticket secondTicket)
-        : firstDestination(firstDestination), firstTicket(firstTicket),
-            secondDestination(secondDestination), secondTicket(secondTicket) {
+        : first(playerId, firstDestination, firstTicket),
+          second(playerId, secondDestination, secondTicket) {
     this->playerId = playerId;
     this->commandType = CommandType::DOUBLE_MOVE;
 }
@@ -24,49 +18,33 @@ engine::DoubleMoveCommand::DoubleMoveCommand(int playerId, int firstDestination,
 engine::DoubleMoveCommand::~DoubleMoveCommand() {
 }
 
-bool engine::DoubleMoveCommand::execute(Engine *engine) {
-    state::GameState& gameState = engine->getState();
-    std::vector<state::Player*> players = gameState.getPlayers();
+bool engine::DoubleMoveCommand::execute(Engine* engine) {
+    state::GameState& game = engine->getState();
+    Rules& rules = engine->getRules();
 
-    bool isPlayerIdNotValid = (playerId < 0 || playerId >= (int)players.size());
-    if (isPlayerIdNotValid) {
-        return false;
-    }
-    state::Player* currentPlayer = players[playerId];
+    bool isPlayerDoubleMoveLegal = (rules.isLegalDoubleMove(game, playerId, first.getDestination(),
+        first.getTicket(), second.getDestination(), second.getTicket()));
 
-    auto* mrX = dynamic_cast<state::MrX*>(currentPlayer);
-    bool currentPlayerIsMrX = (mrX != nullptr);
-    if (!currentPlayerIsMrX) {
+    if (!isPlayerDoubleMoveLegal) {
         return false;
     }
 
-    if (!mrX->hasDoubleTicket()) {
+    state::MrX* mrx = dynamic_cast<state::MrX*>(game.getPlayers()[playerId]);
+
+    int turn = game.getTurn();
+    if (!first.execute(engine)) {
         return false;
     }
-
-    // TODO: si les deux tickets sont noirs, il faut en avoir 2
-    // (nécessite un getter du nombre de tickets noirs dans MrX)
-    bool usesBlack = (firstTicket == state::Ticket::BlackTicket
-                   || secondTicket == state::Ticket::BlackTicket);
-    if (usesBlack && !mrX->hasBlackTicket()) {
+    if (rules.isRevealTurn(turn))
+        mrx->setLastKnownStationId(first.getDestination());
+    game.setTurn(turn + 1);
+    if (!second.execute(engine)) {
         return false;
     }
+    if (rules.isRevealTurn(turn + 1))
+        mrx->setLastKnownStationId(second.getDestination());
 
-    const state::Board& board = gameState.getBoard();
-    if (!isMoveLegal(board, currentPlayer->getCurrentStationId(), firstDestination)) {
-        return false;
-    }
-    if (!isMoveLegal(board, firstDestination, secondDestination)) {
-        return false;
-    }
-
-    mrX->use_double_ticket();
-
-    mrX->useTransportTicket(firstTicket);
-    mrX->setCurrentStationId(firstDestination);
-
-    mrX->useTransportTicket(secondTicket);
-    mrX->setCurrentStationId(secondDestination);
+    mrx->use_double_ticket();
     return true;
 }
 
@@ -74,9 +52,7 @@ Json::Value engine::DoubleMoveCommand::serialize() const {
     Json::Value v;
     v["type"] = (int)commandType;
     v["player"] = playerId;
-    v["firstDestination"] = firstDestination;
-    v["firstTicket"] = (int)firstTicket;
-    v["secondDestination"] = secondDestination;
-    v["secondTicket"] = (int)secondTicket;
+    v["first"] = first.serialize();
+    v["second"] = second.serialize();
     return v;
 }

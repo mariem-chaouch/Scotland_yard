@@ -29,44 +29,20 @@ bool engine::PassCommand::execute(Engine *engine) {
     state::GameState& gameState = engine->getState();
     std::vector<state::Player*> players = gameState.getPlayers();
 
-
     bool isPlayerIdNotValid = (playerId < 0 || playerId >= (int)players.size());
     if (isPlayerIdNotValid) {
         return false;
     }
 
     auto* detective = dynamic_cast<state::Detective*>(players[playerId]);
-    bool currentPlayerIsDetective = (detective!=nullptr);
+    bool currentPlayerIsDetective = (detective != nullptr);
     if (!currentPlayerIsDetective) {
         return false;
     }
 
-    const state::Board& board = gameState.getBoard();
-    int from = detective->getCurrentStationId();
-
-    for (int neighbor : board.getNeighbors(from)) {
-        bool isStationTaken = false;
-        for (state::Player * otherPlayer : players) {
-            bool isOtherPlayerDetective = dynamic_cast<state::Detective*>(otherPlayer) != nullptr;
-            bool isOtherPlayerANeighbour = otherPlayer->getCurrentStationId() == neighbor;
-
-            if (otherPlayer != detective && isOtherPlayerDetective && isOtherPlayerANeighbour) {
-                isStationTaken = true;
-                break;
-            }
-        }
-        if (isStationTaken) continue;
-
-
-        for (state::Transport t : board.getTransportsBetween(from, neighbor)) {
-            bool canTheDetectiveGoToNeighbour = detectiveCanUse(detective, t);
-            if (canTheDetectiveGoToNeighbour) {
-                return false;
-            }
-        }
-    }
-
-    return true;
+    // On ne peut passer que s'il n'existe aucun coup légal
+    bool hasNoLegalMove = engine->getRules().getLegalMoves(gameState, playerId).empty();
+    return hasNoLegalMove;
 }
 
 Json::Value engine::PassCommand::serialize() const {

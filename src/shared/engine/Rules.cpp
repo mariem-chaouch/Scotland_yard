@@ -24,8 +24,11 @@ static bool ticketMatches(state::Ticket ticket, state::Transport transport) {
 bool Rules::isLegalMove(state::GameState& game, int playerId,
                         int destination, state::Ticket ticket) {
     std::vector<state::Player*> players = game.getPlayers();
-    if (playerId < 0 || playerId >= (int) players.size())
-        return false;                                   // joueur inexistant
+
+    bool isPlayerValid = (playerId >= 0 && playerId < (int)players.size());
+    if (!isPlayerValid) {
+        return false;
+    }
 
     state::Player* player = players[playerId];
     state::MrX* mrx = dynamic_cast<state::MrX*>(player);
@@ -115,6 +118,33 @@ bool Rules::isGameOver(state::GameState& game) {
             return false;
     }
     return true;
+}
+
+bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
+        int firstDestination, state::Ticket firstTicket,
+            int secondDestination, state::Ticket secondTicket) {
+    std::vector<state::Player*> players = game.getPlayers();
+    bool isPlayerValid = (playerId >= 0 && playerId < (int)players.size());
+    if (!isPlayerValid) {
+        return false;
+    }
+
+    state::MrX* mrx = dynamic_cast<state::MrX*>(players[playerId]);
+    bool playerIsDetective = (mrx == nullptr);
+    if (playerIsDetective || !mrx->hasDoubleTicket()) {
+        return false;
+    }
+
+    bool isFirstMoveLegal = isLegalMove(game, playerId, firstDestination, firstTicket);
+    if (!isFirstMoveLegal) {
+        return false;
+    }
+
+    int positionBeforeFirstMove = mrx->getCurrentStationId();
+    mrx->setCurrentStationId(firstDestination);
+    bool isSecondMoveLegal = isLegalMove(game, playerId, secondDestination, secondTicket);
+    mrx->setCurrentStationId(positionBeforeFirstMove);
+    return isSecondMoveLegal;
 }
 
 }
