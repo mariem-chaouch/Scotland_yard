@@ -116,7 +116,30 @@ bool Rules::isGameOver(state::GameState& game) {
     }
     return true;
 }
+    bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
+                                  int firstDestination, state::Ticket firstTicket,
+                                  int secondDestination, state::Ticket secondTicket) {
+    std::vector<state::Player*> players = game.getPlayers();
+    if (playerId < 0 || playerId >= (int) players.size())
+        return false;
 
+    // Seul Mister X peut jouer un Coup double, et il doit lui en rester un
+    state::MrX* mrx = dynamic_cast<state::MrX*>(players[playerId]);
+    if (mrx == nullptr || !mrx->hasDoubleTicket())
+        return false;
+
+    // 1er déplacement
+    if (!isLegalMove(game, playerId, firstDestination, firstTicket))
+        return false;
+
+    // 2e déplacement, à partir de la nouvelle station : on simule, puis on annule
+    int start = mrx->getCurrentStationId();
+    mrx->setCurrentStationId(firstDestination);
+    bool secondOk = isLegalMove(game, playerId, secondDestination, secondTicket);
+    mrx->setCurrentStationId(start);
+
+    return secondOk;
+}
 }
 
 
