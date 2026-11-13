@@ -5,18 +5,6 @@
 #include "Engine.h"
 #include "state/Detective.h"
 
-namespace {
-    // Un détective ne peut pas utiliser le bateau (il faudrait un ticket noir)
-    bool detectiveCanUse(const state::Detective* d, state::Transport t) {
-        switch (t) {
-            case state::Transport::Taxi:  return d->hasTicket(state::Ticket::TaxiTicket);
-            case state::Transport::Bus:   return d->hasTicket(state::Ticket::BusTicket);
-            case state::Transport::Train: return d->hasTicket(state::Ticket::TrainTicket);
-            default:                      return false;
-        }
-    }
-}
-
 engine::PassCommand::PassCommand(int playerId) {
     this->playerId = playerId;
     this->commandType = CommandType::PASS;

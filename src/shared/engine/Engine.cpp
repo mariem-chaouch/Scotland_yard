@@ -2,7 +2,6 @@
 #include "state/MrX.h"
 
 namespace engine {
-
     // Constructeur : l'historique commence comme un tableau JSON vide
     Engine::Engine() : record(Json::arrayValue) {}
 
@@ -99,8 +98,12 @@ namespace engine {
                 record.append(entry);                      // on note le coup joué, avec son tour
                 nextPlayer();                              // au joueur suivant
             }
+            int turn = currentState.getTurn();
+            if (cmd->execute(this)) {
+                Json::Value entry = cmd->serialize();
+                entry["turn"] = turn;
+            }
+            commands.clear();                                  // la file est vide
         }
-        commands.clear();                                  // la file est vide
     }
-
 }

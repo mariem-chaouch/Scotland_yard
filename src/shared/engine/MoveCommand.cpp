@@ -1,10 +1,7 @@
-//
-// Created by 33651 on 12/11/2026.
-//
-
 #include "MoveCommand.h"
 #include "Engine.h"
 #include "state/Player.h"
+#include "state/MrX.h"
 
 engine::MoveCommand::MoveCommand(int playerId, int destination, state::Ticket ticket)
     : destination(destination), ticket(ticket){
@@ -24,7 +21,16 @@ bool engine::MoveCommand::execute(Engine *engine) {
     }
 
     state::Player* player = gameState.getPlayers()[playerId];
-    return player->makeMove(destination, ticket);
+    bool hasMoved = player->makeMove(destination, ticket);
+
+    auto* mrX = dynamic_cast<state::MrX*>(player);
+    bool mustReveal = hasMoved && mrX != nullptr
+                      && engine->getRules().isRevealTurn(gameState.getTurn());
+    if (mustReveal) {
+        mrX->setLastKnownStationId(destination);
+    }
+
+    return hasMoved;
 }
 
 
@@ -36,3 +42,5 @@ Json::Value engine::MoveCommand::serialize() const{
     v["ticket"] = (int)ticket;
     return v;
 }
+
+

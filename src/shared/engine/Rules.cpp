@@ -76,11 +76,13 @@ std::vector<std::pair<int, state::Ticket>> Rules::getLegalMoves(state::GameState
                                                                int playerId) {
     std::vector<std::pair<int, state::Ticket>> moves;
     const state::Ticket tickets[] = { state::TaxiTicket, state::BusTicket,
-                                      state::TrainTicket, state::BlackTicket };
-    for (int station = 1; station <= NB_STATIONS; station++) {
+        state::TrainTicket, state::BlackTicket };
+    int from = game.getPlayers()[playerId]->getCurrentStationId();
+    for (int station : game.getBoard().getNeighbors(from)){
         for (state::Ticket t : tickets) {
-            if (isLegalMove(game, playerId, station, t))
+            if (isLegalMove(game, playerId, station, t)){
                 moves.push_back({station, t});
+            }
         }
     }
     return moves;
@@ -108,8 +110,9 @@ bool Rules::isGameOver(state::GameState& game) {
     if (game.getTurn() > LAST_TURN)
         return true;
 
-    // Mister X ne peut plus bouger
-    if (getLegalMoves(game, 0).empty())
+    // Mister X ne peut plus bouger au moment de son tour
+    bool mrxToPlay = (game.getCurrentPlayer() == players[0]);
+    if (mrxToPlay && getLegalMoves(game, 0).empty())
         return true;
 
     // Plus aucun détective ne peut bouger
@@ -126,6 +129,16 @@ bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
     std::vector<state::Player*> players = game.getPlayers();
     bool isPlayerValid = (playerId >= 0 && playerId < (int)players.size());
     if (!isPlayerValid) {
+        return false;
+    }
+
+    bool mrXUsesTwoBlackTickets = (firstTicket == state::BlackTicket && secondTicket == state::BlackTicket);
+    if ( mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < 2) {
+        return false;
+    }
+
+    //MrX can't use double ticket during his last turn
+    if (game.getTurn() >= LAST_TURN) {
         return false;
     }
 
