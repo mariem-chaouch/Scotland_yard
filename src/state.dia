@@ -88,8 +88,6 @@
       </dia:composite>
     </dia:attribute>
   </dia:diagramdata>
-  <dia:layer name="Background" visible="true" connectable="false"/>
-  <dia:layer name="Arrière-plan" visible="true" connectable="true" active="true">
     <dia:object type="UML - LargePackage" version="0" id="O0">
       <dia:attribute name="obj_pos">
         <dia:point val="-27,-17"/>
@@ -1671,16 +1669,16 @@
     </dia:object>
     <dia:object type="UML - Association" version="2" id="O7">
       <dia:attribute name="obj_pos">
-        <dia:point val="12.252,1.79076"/>
+        <dia:point val="12.252,1.79074"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="11.502,1.04076;19.4175,18.8595"/>
+        <dia:rectangle val="11.502,1.04074;19.4175,18.8595"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="12.252,1.79076"/>
+        <dia:point val="12.252,1.79074"/>
         <dia:point val="12.252,11.0085"/>
         <dia:point val="19.2175,11.0085"/>
         <dia:point val="19.2175,18.0595"/>
@@ -2270,7 +2268,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#Player*#</dia:string>
+            <dia:string>#state::Player*#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -3847,7 +3845,7 @@
         <dia:point val="-4.2325,-14"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-14.6483,-28.1026;-4.1825,-13.95"/>
+        <dia:rectangle val="-14.6421,-28.1009;-4.1825,-13.95"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3855,8 +3853,8 @@
       <dia:attribute name="orth_points">
         <dia:point val="-4.2325,-14"/>
         <dia:point val="-4.2325,-24.3"/>
-        <dia:point val="-14.2133,-24.3"/>
-        <dia:point val="-14.196,-27.6503"/>
+        <dia:point val="-14.196,-24.3"/>
+        <dia:point val="-14.1915,-27.6503"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
@@ -4725,5 +4723,4 @@
       </dia:connections>
       <dia:childnode parent="O0"/>
     </dia:object>
-  </dia:layer>
 </dia:diagram>
