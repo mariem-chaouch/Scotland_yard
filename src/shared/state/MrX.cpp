@@ -31,5 +31,11 @@ namespace state {
     std::vector<std::pair<int, Ticket>> MrX::getHistory() {
         return history;
     }
+    int MrX::getLastKnownStationId() const {
+        return last_known_station_id;
+    }
 
+    void MrX::setLastKnownStationId(int id) {
+        last_known_station_id = id;
+    }
 }

@@ -1,5 +1,5 @@
 #include "Engine.h"
-
+#include "state/MrX.h"
 namespace engine {
 
     // Constructeur : l'historique commence comme un tableau JSON vide
@@ -39,6 +39,9 @@ namespace engine {
             }
         }
         commands.clear();                          // la file est vide
+    }
+    Rules& Engine::getRules() {
+        return rules;
     }
 
 }
