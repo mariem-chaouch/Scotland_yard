@@ -35,6 +35,10 @@ namespace state {
         return last_known_station_id;
     }
 
+    int MrX::getNbBlackTickets() const {
+        return nb_black_tickets;
+    }
+
     void MrX::setLastKnownStationId(int id) {
         last_known_station_id = id;
     }

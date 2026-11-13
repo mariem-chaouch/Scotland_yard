@@ -24,8 +24,11 @@ static bool ticketMatches(state::Ticket ticket, state::Transport transport) {
 bool Rules::isLegalMove(state::GameState& game, int playerId,
                         int destination, state::Ticket ticket) {
     std::vector<state::Player*> players = game.getPlayers();
-    if (playerId < 0 || playerId >= (int) players.size())
-        return false;                                   // joueur inexistant
+
+    bool isPlayerValid = (playerId >= 0 && playerId < (int)players.size());
+    if (!isPlayerValid) {
+        return false;
+    }
 
     state::Player* player = players[playerId];
     state::MrX* mrx = dynamic_cast<state::MrX*>(player);
@@ -73,11 +76,13 @@ std::vector<std::pair<int, state::Ticket>> Rules::getLegalMoves(state::GameState
                                                                int playerId) {
     std::vector<std::pair<int, state::Ticket>> moves;
     const state::Ticket tickets[] = { state::TaxiTicket, state::BusTicket,
-                                      state::TrainTicket, state::BlackTicket };
-    for (int station = 1; station <= NB_STATIONS; station++) {
+        state::TrainTicket, state::BlackTicket };
+    int from = game.getPlayers()[playerId]->getCurrentStationId();
+    for (int station : game.getBoard().getNeighbors(from)){
         for (state::Ticket t : tickets) {
-            if (isLegalMove(game, playerId, station, t))
+            if (isLegalMove(game, playerId, station, t)){
                 moves.push_back({station, t});
+            }
         }
     }
     return moves;
@@ -105,8 +110,9 @@ bool Rules::isGameOver(state::GameState& game) {
     if (game.getTurn() > LAST_TURN)
         return true;
 
-    // Mister X ne peut plus bouger
-    if (getLegalMoves(game, 0).empty())
+    // Mister X ne peut plus bouger au moment de son tour
+    bool mrxToPlay = (game.getCurrentPlayer() == players[0]);
+    if (mrxToPlay && getLegalMoves(game, 0).empty())
         return true;
 
     // Plus aucun détective ne peut bouger
@@ -116,30 +122,44 @@ bool Rules::isGameOver(state::GameState& game) {
     }
     return true;
 }
-    bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
-                                  int firstDestination, state::Ticket firstTicket,
-                                  int secondDestination, state::Ticket secondTicket) {
+
+bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
+        int firstDestination, state::Ticket firstTicket,
+            int secondDestination, state::Ticket secondTicket) {
     std::vector<state::Player*> players = game.getPlayers();
-    if (playerId < 0 || playerId >= (int) players.size())
+    bool isPlayerValid = (playerId >= 0 && playerId < (int)players.size());
+    if (!isPlayerValid) {
         return false;
+    }
 
-    // Seul Mister X peut jouer un Coup double, et il doit lui en rester un
+    bool mrXUsesTwoBlackTickets = (firstTicket == state::BlackTicket && secondTicket == state::BlackTicket);
+    if ( mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < 2) {
+        return false;
+    }
+
+    //MrX can't use double ticket during his last turn
+    if (game.getTurn() >= LAST_TURN) {
+        return false;
+    }
+
     state::MrX* mrx = dynamic_cast<state::MrX*>(players[playerId]);
-    if (mrx == nullptr || !mrx->hasDoubleTicket())
+    bool playerIsDetective = (mrx == nullptr);
+    if (playerIsDetective || !mrx->hasDoubleTicket()) {
         return false;
+    }
 
-    // 1er déplacement
-    if (!isLegalMove(game, playerId, firstDestination, firstTicket))
+    bool isFirstMoveLegal = isLegalMove(game, playerId, firstDestination, firstTicket);
+    if (!isFirstMoveLegal) {
         return false;
+    }
 
-    // 2e déplacement, à partir de la nouvelle station : on simule, puis on annule
-    int start = mrx->getCurrentStationId();
+    int positionBeforeFirstMove = mrx->getCurrentStationId();
     mrx->setCurrentStationId(firstDestination);
-    bool secondOk = isLegalMove(game, playerId, secondDestination, secondTicket);
-    mrx->setCurrentStationId(start);
-
-    return secondOk;
+    bool isSecondMoveLegal = isLegalMove(game, playerId, secondDestination, secondTicket);
+    mrx->setCurrentStationId(positionBeforeFirstMove);
+    return isSecondMoveLegal;
 }
+
 }
 
 
