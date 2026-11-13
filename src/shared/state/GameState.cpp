@@ -38,3 +38,7 @@ state::GameState::GameState() {
     turn = 0;
 }
 
+state::Player*state::GameState::getCurrentPlayer() const {
+    return current_player;
+}
+
