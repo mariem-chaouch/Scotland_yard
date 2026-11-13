@@ -26,6 +26,9 @@ int state::GameState::getTurn() const{
 std::vector<state::Player*> state::GameState::getPlayers() const{
     return players;
 }
+Player* state::GameState::getCurrentPlayer() const{
+    return current_player;
+}
 
 state::GameState::GameState() {
     std::cout << "--- Constructeur Game ---" << std::endl;
