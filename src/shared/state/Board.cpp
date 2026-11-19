@@ -1,5 +1,6 @@
 #include <unordered_map>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include "Board.h"
 #include "Station.h"
@@ -11,14 +12,33 @@
 using namespace state;
 
 Board::Board ( )
-{
-    addStation(Station(0, {.x = 150, .y = 150}));
-    addStation(Station(1, {.x = 350, .y = 150}));
-    addStation(Station(2, {.x = 550, .y = 150}));
-    addStation(Station(3, {.x = 250, .y = 350}));
-    addStation(Station(4, {.x = 450, .y = 350}));
-    addStation(Station(5, {.x = 650, .y = 350}));
+{   
+    
+    std::ifstream file(RESOURCE_DIR "/pos.txt");
 
+    if (!file.is_open()) {
+        throw std::runtime_error(
+            "Impossible d'ouvrir pos.txt"
+        );
+    }
+
+    int nbStations;
+    file >> nbStations;
+
+    int id;
+    float x, y;
+    int count = 0;
+
+    while (file >> id >> x >> y)
+    {
+        addStation(Station(id, {.x = x, .y = y}));
+        count++;
+    }
+
+    std::cout << "Stations chargees : "
+              << count << " / "
+              << nbStations << std::endl;
+/*
     addConnection(0, 1, Connection(Taxi));
     addConnection(1, 2, Connection(Bus));
     addConnection(0, 3, Connection(Bus));
@@ -26,7 +46,7 @@ Board::Board ( )
     addConnection(1, 4, Connection(Train));
     addConnection(2, 4, Connection(Bus));
     addConnection(3, 4, Connection(Taxi));
-    addConnection(4, 5, Connection(Bus));
+    addConnection(4, 5, Connection(Bus));*/
 }
 
 Board::~Board () = default;
@@ -93,6 +113,17 @@ bool Board::areConnected (int station1Id, int station2Id)
 }
 
 const Station& Board::getStation (int stationId) const
+{
+    auto it = stationVertices.find(stationId);
+
+    if (it == stationVertices.end())
+    {
+        throw std::invalid_argument("Station does not exist");
+    }
+    return transportMap[it->second];
+}
+
+Station& Board::getStation (int stationId)
 {
     auto it = stationVertices.find(stationId);
 

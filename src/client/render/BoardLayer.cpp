@@ -22,6 +22,11 @@ namespace render {
             std::cerr << "Failed to load map.png\n";
             return;
         }
+        sf::Vector2u size = textures.back()->getSize();
+
+        std::cout << "Map size: "
+                << size.x << " x " << size.y
+                << std::endl;
 
         sprites.emplace_back(*textures.back());
     }
@@ -54,8 +59,16 @@ namespace render {
             (windowSize.x - width) / 2.f,
             (windowSize.y - mapYoffset - height) / 2.f
         );
-
+      
         target.draw(sprites.back());
     }
+    sf::FloatRect BoardLayer::getMapBounds() const
+    {
+        if (sprites.empty()) {
+        return sf::FloatRect();
+        }
+
+        return sprites[0].getGlobalBounds();
+        }
 
 }
