@@ -20,13 +20,13 @@ BOOST_AUTO_TEST_CASE(TestBoardStations)
     Board board;
 
     // Check that a station can be retrieved by its ID.
-    Station& station = board.getStation(1);
+    const Station& station = board.getStation(1);
 
     BOOST_CHECK_EQUAL(station.getId(), 1);
 
     try {
         // Check that try to retrieve a non existent station throws an exception.
-        Station& station = board.getStation(300);
+        const Station& station = board.getStation(300);
 
     }catch (std::exception& e) {}
 

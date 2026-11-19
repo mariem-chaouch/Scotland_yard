@@ -106,4 +106,9 @@ namespace engine {
             commands.clear();                                  // la file est vide
         }
     }
+    // Un joueur vient d'aller de "from" à "to" : on met à jour l'occupation des stations
+    void Engine::updateTaken(int from, int to) {
+        currentState.setStationTaken(from, false);   // l'ancienne station est libérée
+        currentState.setStationTaken(to, true);      // la nouvelle est occupée
+    }
 }

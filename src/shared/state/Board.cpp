@@ -131,7 +131,7 @@ bool Board::areConnected (int station1Id, int station2Id) const
     return result.second;
 }
 
-Station& Board::getStation (int stationId)
+const Station& Board::getStation (int stationId) const
 {
     auto it = stationVertices.find(stationId);
 
@@ -154,4 +154,17 @@ std::vector<Transport> Board::getTransportsBetween(int station1Id, int station2I
             result.push_back(transportMap[*e].getTransport());
     }
     return result;
+}
+bool Board::isStationTaken(int stationId) const {
+    auto it = stationVertices.find(stationId);
+    if (it == stationVertices.end())
+        return false;
+    return transportMap[it->second].isTaken();      // ← Station::isTaken()
+}
+
+void Board::setStationTaken(int stationId, bool taken) {
+    auto it = stationVertices.find(stationId);
+    if (it == stationVertices.end())
+        return;
+    transportMap[it->second].setTaken(taken);       // ← Station::setTaken()
 }

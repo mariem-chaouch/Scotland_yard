@@ -42,3 +42,6 @@ state::Player*state::GameState::getCurrentPlayer() const {
     return current_player;
 }
 
+void state::GameState::setStationTaken(int stationId, bool taken) {
+    board.setStationTaken(stationId, taken);
+}
