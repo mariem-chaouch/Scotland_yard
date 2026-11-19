@@ -132,11 +132,6 @@ bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
         return false;
     }
 
-    bool mrXUsesTwoBlackTickets = (firstTicket == state::BlackTicket && secondTicket == state::BlackTicket);
-    if ( mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < 2) {
-        return false;
-    }
-
     //MrX can't use double ticket during his last turn
     if (game.getTurn() >= LAST_TURN) {
         return false;
@@ -145,6 +140,11 @@ bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
     state::MrX* mrx = dynamic_cast<state::MrX*>(players[playerId]);
     bool playerIsDetective = (mrx == nullptr);
     if (playerIsDetective || !mrx->hasDoubleTicket()) {
+        return false;
+    }
+
+    bool mrXUsesTwoBlackTickets = (firstTicket == state::BlackTicket && secondTicket == state::BlackTicket);
+    if ( mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < 2) {
         return false;
     }
 
