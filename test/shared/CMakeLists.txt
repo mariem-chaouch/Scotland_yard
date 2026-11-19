@@ -6,6 +6,7 @@ add_custom_test(game)
 add_custom_test(connection)
 
 add_custom_test(board)
+add_custom_test(engine)
 
 # vim: set sw=2 sts=2 et:
 

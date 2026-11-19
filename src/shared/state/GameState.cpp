@@ -45,3 +45,10 @@ state::Player*state::GameState::getCurrentPlayer() const {
 void state::GameState::setStationTaken(int stationId, bool taken) {
     board.setStationTaken(stationId, taken);
 }
+void state::GameState::setTurn(int turn) {
+    this->turn = turn;
+}
+
+void state::GameState::setCurrentPlayer(Player* player) {
+    current_player = player;
+}

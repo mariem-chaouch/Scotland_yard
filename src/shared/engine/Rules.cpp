@@ -3,11 +3,18 @@
 #include "state/Detective.h"
 #include "state/GameState.h"
 #include "state/Transport.h"
+#include <algorithm>
 
 namespace engine {
 
-static const int NB_STATIONS = 199;
 static const int LAST_TURN = 24;
+
+// Les cartes Départ : chaque joueur tire sa station au hasard parmi elles.
+// À vérifier avec les cartes de votre boîte de jeu.
+static const std::vector<int> START_STATIONS = {
+    35, 45, 51, 71, 78, 104, 106, 127, 132, 146, 166, 170, 172,
+    13, 26, 29, 34, 50, 53, 91, 94, 103, 112, 117, 123, 138, 141, 155, 174, 197, 198
+};
 
 // Un ticket permet-il d'emprunter ce transport ?
 static bool ticketMatches(state::Ticket ticket, state::Transport transport) {
@@ -25,10 +32,9 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
                         int destination, state::Ticket ticket) {
     std::vector<state::Player*> players = game.getPlayers();
 
-    bool isPlayerValid = (playerId >= 0 && playerId < (int)players.size());
-    if (!isPlayerValid) {
+    bool isPlayerValid = (playerId >= 0 && playerId < (int) players.size());
+    if (!isPlayerValid)
         return false;
-    }
 
     state::Player* player = players[playerId];
     state::MrX* mrx = dynamic_cast<state::MrX*>(player);
@@ -75,14 +81,25 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
 std::vector<std::pair<int, state::Ticket>> Rules::getLegalMoves(state::GameState& game,
                                                                int playerId) {
     std::vector<std::pair<int, state::Ticket>> moves;
+    std::vector<state::Player*> players = game.getPlayers();
+    if (playerId < 0 || playerId >= (int) players.size())
+        return moves;                                   // joueur inexistant : aucun coup
+
+    int from = players[playerId]->getCurrentStationId();
+    if (from <= 0)
+        return moves;                                   // pas encore placé (tour 0)
+
+    // Les voisins, sans doublons (deux stations peuvent être reliées par taxi ET bus)
+    std::vector<int> neighbors = game.getBoard().getNeighbors(from);
+    std::sort(neighbors.begin(), neighbors.end());
+    neighbors.erase(std::unique(neighbors.begin(), neighbors.end()), neighbors.end());
+
     const state::Ticket tickets[] = { state::TaxiTicket, state::BusTicket,
-        state::TrainTicket, state::BlackTicket };
-    int from = game.getPlayers()[playerId]->getCurrentStationId();
-    for (int station : game.getBoard().getNeighbors(from)){
+                                      state::TrainTicket, state::BlackTicket };
+    for (int station : neighbors) {
         for (state::Ticket t : tickets) {
-            if (isLegalMove(game, playerId, station, t)){
+            if (isLegalMove(game, playerId, station, t))
                 moves.push_back({station, t});
-            }
         }
     }
     return moves;
@@ -98,6 +115,8 @@ bool Rules::isGameOver(state::GameState& game) {
     std::vector<state::Player*> players = game.getPlayers();
     if (players.empty())
         return true;
+    if (game.getTurn() == 0)
+        return false;                                   // tour 0 : placement, pas encore commencé
 
     // Mister X est le joueur 0 : un détective sur sa case = capture
     int mrxStation = players[0]->getCurrentStationId();
@@ -123,36 +142,33 @@ bool Rules::isGameOver(state::GameState& game) {
     return true;
 }
 
+// Le Coup double de Mister X est-il permis ?
 bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
-        int firstDestination, state::Ticket firstTicket,
-            int secondDestination, state::Ticket secondTicket) {
+                              int firstDestination, state::Ticket firstTicket,
+                              int secondDestination, state::Ticket secondTicket) {
     std::vector<state::Player*> players = game.getPlayers();
-    bool isPlayerValid = (playerId >= 0 && playerId < (int)players.size());
-    if (!isPlayerValid) {
+    bool isPlayerValid = (playerId >= 0 && playerId < (int) players.size());
+    if (!isPlayerValid)
         return false;
-    }
 
-    //MrX can't use double ticket during his last turn
-    if (game.getTurn() >= LAST_TURN) {
+    // Pas de Coup double au dernier tour
+    if (game.getTurn() >= LAST_TURN)
         return false;
-    }
 
     state::MrX* mrx = dynamic_cast<state::MrX*>(players[playerId]);
     bool playerIsDetective = (mrx == nullptr);
-    if (playerIsDetective || !mrx->hasDoubleTicket()) {
+    if (playerIsDetective || !mrx->hasDoubleTicket())
         return false;
-    }
 
-    bool mrXUsesTwoBlackTickets = (firstTicket == state::BlackTicket && secondTicket == state::BlackTicket);
-    if ( mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < 2) {
+    bool mrXUsesTwoBlackTickets = (firstTicket == state::BlackTicket &&
+                                   secondTicket == state::BlackTicket);
+    if (mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < 2)
         return false;
-    }
 
-    bool isFirstMoveLegal = isLegalMove(game, playerId, firstDestination, firstTicket);
-    if (!isFirstMoveLegal) {
+    if (!isLegalMove(game, playerId, firstDestination, firstTicket))
         return false;
-    }
 
+    // 2e déplacement depuis la nouvelle station : on simule, puis on annule
     int positionBeforeFirstMove = mrx->getCurrentStationId();
     mrx->setCurrentStationId(firstDestination);
     bool isSecondMoveLegal = isLegalMove(game, playerId, secondDestination, secondTicket);
@@ -160,13 +176,25 @@ bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
     return isSecondMoveLegal;
 }
 
+// Le joueur peut-il commencer la partie sur cette station ?
+bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
+    std::vector<state::Player*> players = game.getPlayers();
+
+    if (game.getTurn() != 0)
+        return false;                                   // seulement au tour 0
+    if (playerId < 0 || playerId >= (int) players.size())
+        return false;                                   // joueur inexistant
+
+    bool found = std::find(START_STATIONS.begin(), START_STATIONS.end(), station)
+                 != START_STATIONS.end();
+    if (!found)
+        return false;                                   // pas une carte Départ
+
+    for (int i = 0; i < (int) players.size(); i++) {
+        if (i != playerId && players[i]->getCurrentStationId() == station)
+            return false;                               // déjà prise
+    }
+    return true;
 }
 
-
-
-
-
-
-
-
-
+}

@@ -1,6 +1,4 @@
-//
-// Created by 33651 on 12/11/2026.
-//
+
 #include "DoubleMoveCommand.h"
 #include "Engine.h"
 #include "Rules.h"
@@ -22,27 +20,28 @@ bool engine::DoubleMoveCommand::execute(Engine* engine) {
     state::GameState& game = engine->getState();
     Rules& rules = engine->getRules();
 
-    bool isPlayerDoubleMoveLegal = (rules.isLegalDoubleMove(game, playerId, firstMoveCommand.getDestination(),
-        firstMoveCommand.getTicket(), secondMoveCommand.getDestination(), secondMoveCommand.getTicket()));
-
+    // Les deux coups sont vérifiés AVANT d'en jouer un seul
+    bool isPlayerDoubleMoveLegal = rules.isLegalDoubleMove(game, playerId,
+        firstMoveCommand.getDestination(), firstMoveCommand.getTicket(),
+        secondMoveCommand.getDestination(), secondMoveCommand.getTicket());
     if (!isPlayerDoubleMoveLegal) {
         return false;
     }
 
     state::MrX* mrx = dynamic_cast<state::MrX*>(game.getPlayers()[playerId]);
 
+    // 1er déplacement au tour courant
+    // (la révélation éventuelle de Mister X est faite par MoveCommand)
     int turn = game.getTurn();
     if (!firstMoveCommand.execute(engine)) {
         return false;
     }
-    if (rules.isRevealTurn(turn))
-        mrx->setLastKnownStationId(firstMoveCommand.getDestination());
+
+    // Le Coup double compte pour deux tours : le 2e déplacement a lieu au tour suivant
     game.setTurn(turn + 1);
     if (!secondMoveCommand.execute(engine)) {
         return false;
     }
-    if (rules.isRevealTurn(turn + 1))
-        mrx->setLastKnownStationId(secondMoveCommand.getDestination());
 
     mrx->use_double_ticket();
     return true;

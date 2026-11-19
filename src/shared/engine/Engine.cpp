@@ -28,18 +28,8 @@ namespace engine {
         if (players.empty())
             return;
 
-        // Positions de départ, choisies parmi les cartes « Départ » du vrai jeu.
-        // Elles sont fixes pour que le moteur soit déterministe (rejouer une partie
-        // à partir du record donne exactement le même résultat).
-        const int mrxStart = 51;
-        const int detectiveStarts[] = { 13, 26, 29, 34, 50 };
-
-        players[0]->setCurrentStationId(mrxStart);                 // Mister X
-        for (int i = 1; i < (int) players.size() && i <= 5; i++)
-            players[i]->setCurrentStationId(detectiveStarts[i - 1]); // détectives
-
-        currentState.setTurn(1);                       // la partie commence au tour 1
-        currentState.setCurrentPlayer(players[0]);     // Mister X joue en premier
+        currentState.setTurn(0);                       // tour 0 : placement
+        currentState.setCurrentPlayer(players[0]);     // Mister X se place en premier
     }
     // Range une commande dans la file d'attente (elle n'est pas encore exécutée)
     void Engine::addCommand(std::unique_ptr<Command> ptr_cmd) {
@@ -68,43 +58,31 @@ namespace engine {
             return;
 
         int index = getCurrentPlayerIndex();
-        int turn = currentState.getTurn();
-
-        // Mister X vient de jouer pendant un tour d'apparition : sa position devient visible
-        if (index == 0 && rules.isRevealTurn(turn)) {
-            state::MrX* mrx = dynamic_cast<state::MrX*>(players[0]);
-            if (mrx)
-                mrx->setLastKnownStationId(mrx->getCurrentStationId());
-        }
-
         if (index + 1 < (int) players.size()) {
-            currentState.setCurrentPlayer(players[index + 1]);   // joueur suivant
+            currentState.setCurrentPlayer(players[index + 1]);          // joueur suivant
         } else {
-            currentState.setTurn(turn + 1);                      // tout le monde a joué : nouveau tour
-            currentState.setCurrentPlayer(players[0]);           // Mister X recommence
+            currentState.setTurn(currentState.getTurn() + 1);           // nouveau tour
+            currentState.setCurrentPlayer(players[0]);                  // Mister X recommence
         }
     }
 
     // Exécute les commandes en attente, dans l'ordre d'arrivée
+    // Exécute les commandes en attente, dans l'ordre d'arrivée
     void Engine::update() {
         for (auto& cmd : commands) {
             if (rules.isGameOver(currentState))
-                break;                                     // partie terminée : on ne joue plus
+                break;                                  // partie terminée : on ne joue plus
             if (cmd->getPlayerId() != getCurrentPlayerIndex())
-                continue;                                  // pas son tour : commande ignorée
-            if (cmd->execute(this)) {                      // la commande vérifie les règles et modifie l'état
-                Json::Value entry = cmd->serialize();
-                entry["turn"] = currentState.getTurn();
-                record.append(entry);                      // on note le coup joué, avec son tour
-                nextPlayer();                              // au joueur suivant
-            }
-            int turn = currentState.getTurn();
+                continue;                               // pas son tour : commande ignorée
+            int turn = currentState.getTurn();          // tour AVANT execute (un Coup double l'avance)
             if (cmd->execute(this)) {
                 Json::Value entry = cmd->serialize();
                 entry["turn"] = turn;
+                record.append(entry);                   // on note le coup joué
+                nextPlayer();                           // au joueur suivant
             }
-            commands.clear();                                  // la file est vide
         }
+        commands.clear();                               // la file est vidée APRÈS la boucle
     }
     // Un joueur vient d'aller de "from" à "to" : on met à jour l'occupation des stations
     void Engine::updateTaken(int from, int to) {
