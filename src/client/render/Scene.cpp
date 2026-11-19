@@ -10,7 +10,7 @@ namespace render {
         window(sf::VideoMode(1000, 600), "Scotland Yard") {
         //window.setFramerateLimit(60);
         layers.push_back(std::make_unique<BoardLayer>(gameState.getBoard()));
-        layers.push_back(std::make_unique<PlayersLayer>());
+        layers.push_back(std::make_unique<PlayersLayer>(gameState));
         layers.push_back(std::make_unique<InfoLayer>());
     }
 
