@@ -136,5 +136,17 @@ BOOST_AUTO_TEST_CASE(TestDoubleMoveTurnThreeToFive)
   BOOST_CHECK_EQUAL(engine.getState().getTurn(), 5);          // Mister X rejoue au tour 5
   BOOST_CHECK_EQUAL(engine.getCurrentPlayerIndex(), 0);
 }
+BOOST_AUTO_TEST_CASE(TestNoMoveAfterGameOver)
+{
+  Engine engine;
+  placeAll(engine);
+  engine.getState().setTurn(25);                              // après le dernier tour : partie finie
+
+  engine.addCommand(std::make_unique<MoveCommand>(0, 49, TaxiTicket));
+  engine.update();
+
+  BOOST_CHECK_EQUAL(stationOf(engine, 0), 50);                // Mister X n'a pas bougé
+  BOOST_CHECK_EQUAL(engine.getRecord().size(), 5u);           // seulement les 5 placements
+}
 
 /* vim: set sw=2 sts=2 et : */

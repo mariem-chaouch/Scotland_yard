@@ -10,3 +10,4 @@ add_custom_test(engine)
 
 # vim: set sw=2 sts=2 et:
 
+add_custom_test(rules)

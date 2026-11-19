@@ -19,7 +19,7 @@ namespace engine {
         return rules;
     }
 
-    // Prépare une nouvelle partie : positions de départ, tour 1, Mister X commence
+    // tour 0, placement par les StartCommand
     void Engine::init() {
         commands.clear();                              // aucune commande en attente
         record = Json::Value(Json::arrayValue);        // historique vide
