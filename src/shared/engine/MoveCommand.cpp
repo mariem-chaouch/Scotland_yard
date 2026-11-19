@@ -1,6 +1,7 @@
 
 #include "MoveCommand.h"
 #include "Engine.h"
+#include "state/Detective.h"
 #include "state/Player.h"
 #include "state/MrX.h"
 
@@ -26,22 +27,29 @@ namespace engine {
     bool MoveCommand::execute(Engine* engine) {
         state::GameState& gameState = engine->getState();
 
-        if (!engine->getRules().isLegalMove(gameState, playerId, destination, ticket))
+        bool moveIsLegal = engine->getRules().isLegalMove(gameState, playerId, destination, ticket);
+        if (!moveIsLegal) {
             return false;                               // coup interdit : rien ne change
+        }
 
         state::Player* player = gameState.getPlayers()[playerId];
         int from = player->getCurrentStationId();       // station avant le déplacement
         bool hasMoved = player->makeMove(destination, ticket);
-        if (!hasMoved)
+        if (!hasMoved) {
             return false;
-
-        engine->updateTaken(from, destination);         // occupation des stations
+        }
+        bool playerIsDetective = (dynamic_cast<state::Detective*>(player)!=nullptr);
+        if (playerIsDetective) {
+            engine->updateTaken(from, destination);
+        }
 
         // Mister X se montre s'il joue pendant un tour d'apparition
         auto* mrX = dynamic_cast<state::MrX*>(player);
-        if (mrX != nullptr && engine->getRules().isRevealTurn(gameState.getTurn()))
+        bool playerIsMrX = (mrX != nullptr);
+        bool mrXShouldRevealPosition = engine->getRules().isRevealTurn(gameState.getTurn());
+        if (playerIsMrX && mrXShouldRevealPosition) {
             mrX->setLastKnownStationId(destination);
-
+        }
         return true;
     }
 

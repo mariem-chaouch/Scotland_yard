@@ -22,6 +22,10 @@ bool engine::PassCommand::execute(Engine *engine) {
         return false;
     }
 
+    if (gameState.getTurn() == 0) {
+        return false;
+    }
+    
     auto* detective = dynamic_cast<state::Detective*>(players[playerId]);
     bool currentPlayerIsDetective = (detective != nullptr);
     if (!currentPlayerIsDetective) {

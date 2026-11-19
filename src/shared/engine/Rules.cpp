@@ -36,6 +36,10 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
     if (!isPlayerValid)
         return false;
 
+    if (game.getTurn() == 0) {
+        return false;
+    }
+
     state::Player* player = players[playerId];
     state::MrX* mrx = dynamic_cast<state::MrX*>(player);
     state::Detective* detective = dynamic_cast<state::Detective*>(player);
@@ -66,14 +70,11 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
     if (!linkOk)
         return false;
 
-    // 3. La destination ne doit pas être occupée par un détective
-    //    (un détective peut aller sur la case de Mister X : c'est une capture)
-    for (int i = 0; i < (int) players.size(); i++) {
-        if (i == playerId) continue;
-        if (dynamic_cast<state::Detective*>(players[i]) &&
-            players[i]->getCurrentStationId() == destination)
-            return false;
+    bool destinationIsTaken = game.getBoard().isStationTaken(destination);
+    if (destinationIsTaken) {
+        return false;
     }
+
     return true;
 }
 

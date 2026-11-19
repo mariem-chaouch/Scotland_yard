@@ -98,9 +98,11 @@ BOOST_AUTO_TEST_CASE(TestFullRound)
   BOOST_CHECK_EQUAL(engine.getState().getTurn(), 2);          // tout le monde a joué
   BOOST_CHECK_EQUAL(engine.getCurrentPlayerIndex(), 0);
 
-  // taken suit les déplacements
-  BOOST_CHECK(!engine.getState().getBoard().isStationTaken(50));
-  BOOST_CHECK(engine.getState().getBoard().isStationTaken(49));
+  // taken suit les déplacements des détectives, jamais celui de Mister X
+  BOOST_CHECK(!engine.getState().getBoard().isStationTaken(49));   // Mr X ne marque pas sa case
+  BOOST_CHECK(!engine.getState().getBoard().isStationTaken(13));   // libérée par le détective 1
+  BOOST_CHECK(engine.getState().getBoard().isStationTaken(14));    // occupée par le détective 1
+  BOOST_CHECK(engine.getState().getBoard().isStationTaken(27));    // occupée par le détective 2
 
   // l'historique : 5 placements + 5 déplacements, avec le bon tour
   BOOST_CHECK_EQUAL(engine.getRecord().size(), 10u);

@@ -19,7 +19,7 @@ namespace engine {
         return rules;
     }
 
-    // tour 0, placement par les StartCommand
+    //tour 0 : placement
     void Engine::init() {
         commands.clear();                              // aucune commande en attente
         record = Json::Value(Json::arrayValue);        // historique vide
@@ -66,7 +66,7 @@ namespace engine {
         }
     }
 
-    // Exécute les commandes en attente, dans l'ordre d'arrivée
+    
     // Exécute les commandes en attente, dans l'ordre d'arrivée
     void Engine::update() {
         for (auto& cmd : commands) {
