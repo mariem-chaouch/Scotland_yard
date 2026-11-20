@@ -4,5 +4,5 @@
 namespace render {
     Layer::Layer () = default;
     Layer::~Layer () = default;
-    void Layer::init () {};
+    //void Layer::init () {};
 }
