@@ -4,17 +4,20 @@
 #include "state/GameState.h"
 #include "state/Transport.h"
 #include <algorithm>
+#include <array>
 
-namespace engine {
-
-static const int LAST_TURN = 24;
-
-// Les cartes Départ : chaque joueur tire sa station au hasard parmi elles.
-// À vérifier avec les cartes de votre boîte de jeu.
-static const std::vector<int> START_STATIONS = {
-    35, 45, 51, 71, 78, 104, 106, 127, 132, 146, 166, 170, 172,
-    13, 26, 29, 34, 50, 53, 91, 94, 103, 112, 117, 123, 138, 141, 155, 174, 197, 198
-};
+namespace engine{
+    namespace {
+        constexpr int FIRST_TURN = 0;
+        constexpr int LAST_TURN = 24;
+        constexpr int MRX_INDEX = 0;
+        constexpr int NB_BLACK_FOR_DOUBLE_BLACK = 2;
+        constexpr std::array<int, 5> REVEAL_TURNS = {3, 8, 13, 18, 24};
+        constexpr std::array<int, 31> START_STATIONS = {
+            35, 45, 51, 71, 78, 104, 106, 127, 132, 146, 166, 170, 172,
+            13, 26, 29, 34, 50, 53, 91, 94, 103, 112, 117, 123, 138, 141,
+            155, 174, 197, 198};
+    }
 
 // Un ticket permet-il d'emprunter ce transport ?
 static bool ticketMatches(state::Ticket ticket, state::Transport transport) {
@@ -32,7 +35,7 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
                         int destination, state::Ticket ticket) {
     std::vector<state::Player*> players = game.getPlayers();
 
-    bool isPlayerValid = (playerId >= 0 && playerId < (int) players.size());
+    bool isPlayerValid = (playerId >= MRX_INDEX && playerId < (int) players.size());
     if (!isPlayerValid)
         return false;
 
@@ -41,22 +44,10 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
     }
 
     state::Player* player = players[playerId];
-    state::MrX* mrx = dynamic_cast<state::MrX*>(player);
-    state::Detective* detective = dynamic_cast<state::Detective*>(player);
-
-    // 1. Le joueur doit posséder ce ticket
-    if (mrx) {
-        // Mister X prend taxi/bus/métro dans la pioche commune ; seul le Black Ticket est compté
-        if (ticket == state::BlackTicket && !mrx->hasBlackTicket())
-            return false;
-    } else if (detective) {
-        if (!detective->hasTicket(ticket))
-            return false;                               // pas ce ticket (et jamais de Black)
-    } else {
+    if (!player->hasTicket(ticket)) {
         return false;
     }
 
-    // 2. Une liaison du bon transport doit relier la station actuelle à la destination
     int from = player->getCurrentStationId();
     std::vector<state::Transport> transports =
         game.getBoard().getTransportsBetween(from, destination);
@@ -75,6 +66,10 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
         return false;
     }
 
+    for (int i = 1; i < (int) players.size(); i++) {
+        if (players[i]->getCurrentStationId() == destination)
+            return false;
+    }
     return true;
 }
 
@@ -83,7 +78,7 @@ std::vector<std::pair<int, state::Ticket>> Rules::getLegalMoves(state::GameState
                                                                int playerId) {
     std::vector<std::pair<int, state::Ticket>> moves;
     std::vector<state::Player*> players = game.getPlayers();
-    if (playerId < 0 || playerId >= (int) players.size())
+    if (playerId < MRX_INDEX || playerId >= (int) players.size())
         return moves;                                   // joueur inexistant : aucun coup
 
     int from = players[playerId]->getCurrentStationId();
@@ -108,7 +103,7 @@ std::vector<std::pair<int, state::Ticket>> Rules::getLegalMoves(state::GameState
 
 // Mister X se montre-t-il à la fin de ce tour ?
 bool Rules::isRevealTurn(int turn) {
-    return turn == 3 || turn == 8 || turn == 13 || turn == 18 || turn == 24;
+    return std::find(REVEAL_TURNS.begin(), REVEAL_TURNS.end(), turn) != REVEAL_TURNS.end();
 }
 
 // La partie est-elle terminée ?
@@ -120,8 +115,8 @@ bool Rules::isGameOver(state::GameState& game) {
         return false;                                   // tour 0 : placement, pas encore commencé
 
     // Mister X est le joueur 0 : un détective sur sa case = capture
-    int mrxStation = players[0]->getCurrentStationId();
-    for (int i = 1; i < (int) players.size(); i++) {
+    int mrxStation = players[MRX_INDEX]->getCurrentStationId();
+    for (int i = MRX_INDEX+1; i < (int) players.size(); i++) {
         if (players[i]->getCurrentStationId() == mrxStation)
             return true;
     }
@@ -136,7 +131,7 @@ bool Rules::isGameOver(state::GameState& game) {
         return true;
 
     // Plus aucun détective ne peut bouger
-    for (int i = 1; i < (int) players.size(); i++) {
+    for (int i = MRX_INDEX+1; i < (int) players.size(); i++) {
         if (!getLegalMoves(game, i).empty())
             return false;
     }
@@ -148,7 +143,7 @@ bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
                               int firstDestination, state::Ticket firstTicket,
                               int secondDestination, state::Ticket secondTicket) {
     std::vector<state::Player*> players = game.getPlayers();
-    bool isPlayerValid = (playerId >= 0 && playerId < (int) players.size());
+    bool isPlayerValid = (playerId >= MRX_INDEX && playerId < (int) players.size());
     if (!isPlayerValid)
         return false;
 
@@ -156,14 +151,14 @@ bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
     if (game.getTurn() >= LAST_TURN)
         return false;
 
-    state::MrX* mrx = dynamic_cast<state::MrX*>(players[playerId]);
+    auto* mrx = dynamic_cast<state::MrX*>(players[playerId]);
     bool playerIsDetective = (mrx == nullptr);
     if (playerIsDetective || !mrx->hasDoubleTicket())
         return false;
 
     bool mrXUsesTwoBlackTickets = (firstTicket == state::BlackTicket &&
                                    secondTicket == state::BlackTicket);
-    if (mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < 2)
+    if (mrXUsesTwoBlackTickets && mrx->getNbBlackTickets() < NB_BLACK_FOR_DOUBLE_BLACK)
         return false;
 
     if (!isLegalMove(game, playerId, firstDestination, firstTicket))
@@ -181,9 +176,10 @@ bool Rules::isLegalDoubleMove(state::GameState& game, int playerId,
 bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
     std::vector<state::Player*> players = game.getPlayers();
 
-    if (game.getTurn() != 0)
-        return false;                                   // seulement au tour 0
-    if (playerId < 0 || playerId >= (int) players.size())
+    if (game.getTurn() != FIRST_TURN) {
+        return false;
+    }
+    if (playerId < MRX_INDEX || playerId >= (int) players.size())
         return false;                                   // joueur inexistant
 
     bool found = std::find(START_STATIONS.begin(), START_STATIONS.end(), station)
@@ -191,7 +187,7 @@ bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
     if (!found)
         return false;                                   // pas une carte Départ
 
-    for (int i = 0; i < (int) players.size(); i++) {
+    for (int i = MRX_INDEX; i < (int) players.size(); i++) {
         if (i != playerId && players[i]->getCurrentStationId() == station)
             return false;                               // déjà prise
     }

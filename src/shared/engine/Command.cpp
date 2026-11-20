@@ -10,6 +10,10 @@ CommandType Command::getCommandType() const {
     return commandType;
 }
 
+void Command::setCommandType(CommandType type) {
+    commandType = type;
+}
+
 int Command::getPlayerId() const {
     return playerId;
 }

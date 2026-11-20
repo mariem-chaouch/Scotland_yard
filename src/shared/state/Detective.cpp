@@ -8,7 +8,7 @@ namespace state {
     Detective::Detective(std::string color)
         : Player(color), nb_taxi(11), nb_bus(8), nb_train(4) {}
 
-    bool Detective::hasTicket(Ticket ticket) {
+    bool Detective::hasTicket(Ticket ticket) const {
         switch (ticket) {
             case TaxiTicket:  return nb_taxi > 0;
             case BusTicket:   return nb_bus > 0;

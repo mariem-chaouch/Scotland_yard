@@ -1,4 +1,3 @@
-
 #include "DoubleMoveCommand.h"
 #include "Engine.h"
 #include "Rules.h"

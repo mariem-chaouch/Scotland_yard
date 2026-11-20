@@ -12,11 +12,11 @@ namespace state {
         if (nb_double_tickets > 0) nb_double_tickets--;
     }
 
-    bool MrX::hasBlackTicket() {
-        return nb_black_tickets > 0;
+    bool MrX::hasTicket(Ticket ticket) const {
+        return (ticket != BlackTicket) || (nb_black_tickets > 0);
     }
 
-    bool MrX::hasDoubleTicket() {
+    bool MrX::hasDoubleTicket() const {
         return nb_double_tickets > 0;
     }
 
