@@ -37,6 +37,13 @@ state::GameState::GameState() {
     players.push_back(new Detective("red"));
     players.push_back(new Detective("green"));
     players.push_back(new Detective("yellow"));
+    // Positions initiales pour les tests
+    players[0]->setCurrentStationId(5); // Mister X
+    players[1]->setCurrentStationId(1); // Bleu
+    players[2]->setCurrentStationId(2); // Rouge
+    players[3]->setCurrentStationId(3); // Vert
+    players[4]->setCurrentStationId(4); // Jaune
+
     current_player = players.front();
     turn = 0;
 }

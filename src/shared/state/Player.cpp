@@ -11,7 +11,7 @@ namespace state {
         return color;
     }
 
-    int Player::getCurrentStationId() {
+    int Player::getCurrentStationId() const {
         return currentStationId;
     }
 

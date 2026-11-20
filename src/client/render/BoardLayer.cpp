@@ -25,6 +25,11 @@ namespace render {
             std::cerr << "Failed to load map.png\n";
             return;
         }
+        sf::Vector2u size = textures.back()->getSize();
+
+        std::cout << "Map size: "
+                << size.x << " x " << size.y
+                << std::endl;
 
         sprites.emplace_back(*textures[0]);
 
@@ -103,6 +108,15 @@ namespace render {
         }
 
 
+    }
+
+    sf::FloatRect BoardLayer::getMapBounds() const
+    {
+        if (sprites.empty()) {
+            return sf::FloatRect();
+        }
+
+        return sprites[0].getGlobalBounds();
     }
 
     void BoardLayer::showSelectionAt(sf::Vector2f position)

@@ -11,8 +11,10 @@ namespace render {
    "Scotland Yard",
    sf::Style::Fullscreen) {
         //window.setFramerateLimit(60);
-        layers.push_back(std::make_unique<BoardLayer>(gameState.getBoard()));
-        layers.push_back(std::make_unique<PlayersLayer>());
+        auto boardLayer = std::make_unique<BoardLayer>(gameState.getBoard());
+        BoardLayer* boardLayerPtr = boardLayer.get();
+        layers.push_back(std::move(boardLayer));
+        layers.push_back(std::make_unique<PlayersLayer>(gameState, *boardLayerPtr));
         layers.push_back(std::make_unique<InfoLayer>());
     }
 
