@@ -20,10 +20,20 @@ BOOST_AUTO_TEST_CASE(TestBoardStations)
     Board board;
 
     // Check that a station can be retrieved by its ID.
-    // Replace 1 with a station ID that exists in your pos.txt.
     Station& station = board.getStation(1);
 
     BOOST_CHECK_EQUAL(station.getId(), 1);
+
+    try {
+        // Check that try to retrieve a non existent station throws an exception.
+        Station& station = board.getStation(300);
+
+    }catch (std::exception& e) {}
+
+    try {
+        // Check that existent stations can not be added
+        board.addStation(station);
+    }catch (std::exception& e) {}
 }
 
 BOOST_AUTO_TEST_CASE(TestBoardConnections)
@@ -33,9 +43,15 @@ BOOST_AUTO_TEST_CASE(TestBoardConnections)
     // Replace these IDs with two stations connected in graph.txt.
     const int station1 = 1;
     const int station2 = 9;
+    const int station3 = 300;
 
     BOOST_CHECK(board.areConnected(station1, station2));
     BOOST_CHECK(board.areConnected(station2, station1));
+    BOOST_CHECK(!board.areConnected(station1, station3));
+
+    try {
+        board.addConnection(station1, station3, Connection(Train));
+    }catch (std::exception& e) {}
 }
 
 BOOST_AUTO_TEST_CASE(TestBoardNeighbors)
@@ -49,8 +65,16 @@ BOOST_AUTO_TEST_CASE(TestBoardNeighbors)
 
     std::vector<int> neighbors = board.getNeighbors(stationId);
 
+    //test exception
+
+
     BOOST_CHECK(
         std::find(neighbors.begin(), neighbors.end(), neighborId)
         != neighbors.end()
     );
+
+    const int StationIdNotFound = 300;
+    try {
+        std::vector<int> neighborsNotFound = board.getNeighbors(StationIdNotFound);
+    }catch (std::exception& e) {}
 }
