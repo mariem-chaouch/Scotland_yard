@@ -20,13 +20,7 @@ namespace state {
         useTransportTicket(ticket);
         return true;
     }
-
-
-    void Player::useTransportTicket(Ticket ticket) {
-        (void)ticket;
-    }
-
-
+    
     void Player::setColor(const std::string& color) {
         this->color = color;
     }

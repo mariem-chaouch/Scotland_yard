@@ -5,7 +5,7 @@
 #include "state/Transport.h"
 #include <algorithm>
 #include <array>
-
+#include <random>
 namespace engine{
     namespace {
         constexpr int FIRST_TURN = 0;
@@ -29,6 +29,7 @@ static bool ticketMatches(state::Ticket ticket, state::Transport transport) {
         default:                 return false;
     }
 }
+
 
 // Le coup « joueur playerId va en destination avec ce ticket » est-il permis ?
 bool Rules::isLegalMove(state::GameState& game, int playerId,
@@ -231,4 +232,17 @@ bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
 
     return MRX;                                        // tous les détectives sont bloqués
 }
+    // La liste des cartes Départ
+    std::vector<int> Rules::getStartStations() {
+        return std::vector<int>(START_STATIONS.begin(), START_STATIONS.end());
+    }
+    // On mélange le paquet, puis chaque joueur prend la carte suivante
+    std::vector<int> Rules::drawStartStations(int nbPlayers, unsigned int seed) {
+        std::vector<int> deck(START_STATIONS.begin(), START_STATIONS.end());
+        std::mt19937 generator(seed);
+        std::shuffle(deck.begin(), deck.end(), generator);
+        deck.resize(nbPlayers);
+        return deck;
+    }
+
 }

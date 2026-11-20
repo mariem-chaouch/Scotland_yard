@@ -6,8 +6,7 @@
 #include <iostream>
 
 state::Connection::Connection(Transport mean): mean (mean) {
-    std::cout << "--- Constructeur Connection ---" << std::endl;
-    std::cout << mean << std::endl;
+
 }
 
 state::Connection::~Connection() = default;

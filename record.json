@@ -1,0 +1,165 @@
+[
+	{
+		"player" : 0,
+		"station" : 50,
+		"turn" : 0,
+		"type" : 3
+	},
+	{
+		"player" : 1,
+		"station" : 45,
+		"turn" : 0,
+		"type" : 3
+	},
+	{
+		"player" : 2,
+		"station" : 106,
+		"turn" : 0,
+		"type" : 3
+	},
+	{
+		"player" : 3,
+		"station" : 71,
+		"turn" : 0,
+		"type" : 3
+	},
+	{
+		"player" : 4,
+		"station" : 35,
+		"turn" : 0,
+		"type" : 3
+	},
+	{
+		"destination" : 38,
+		"player" : 0,
+		"ticket" : 3,
+		"turn" : 1,
+		"type" : 0
+	},
+	{
+		"destination" : 60,
+		"player" : 1,
+		"ticket" : 0,
+		"turn" : 1,
+		"type" : 0
+	},
+	{
+		"destination" : 107,
+		"player" : 2,
+		"ticket" : 0,
+		"turn" : 1,
+		"type" : 0
+	},
+	{
+		"destination" : 89,
+		"player" : 3,
+		"ticket" : 0,
+		"turn" : 1,
+		"type" : 0
+	},
+	{
+		"destination" : 65,
+		"player" : 4,
+		"ticket" : 0,
+		"turn" : 1,
+		"type" : 0
+	},
+	{
+		"destination" : 51,
+		"player" : 0,
+		"ticket" : 3,
+		"turn" : 2,
+		"type" : 0
+	},
+	{
+		"destination" : 76,
+		"player" : 1,
+		"ticket" : 0,
+		"turn" : 2,
+		"type" : 0
+	},
+	{
+		"destination" : 106,
+		"player" : 2,
+		"ticket" : 0,
+		"turn" : 2,
+		"type" : 0
+	},
+	{
+		"destination" : 13,
+		"player" : 3,
+		"ticket" : 2,
+		"turn" : 2,
+		"type" : 0
+	},
+	{
+		"destination" : 67,
+		"player" : 4,
+		"ticket" : 1,
+		"turn" : 2,
+		"type" : 0
+	},
+	{
+		"destination" : 52,
+		"player" : 0,
+		"ticket" : 3,
+		"turn" : 3,
+		"type" : 0
+	},
+	{
+		"destination" : 77,
+		"player" : 1,
+		"ticket" : 0,
+		"turn" : 3,
+		"type" : 0
+	},
+	{
+		"destination" : 105,
+		"player" : 2,
+		"ticket" : 0,
+		"turn" : 3,
+		"type" : 0
+	},
+	{
+		"destination" : 46,
+		"player" : 3,
+		"ticket" : 2,
+		"turn" : 3,
+		"type" : 0
+	},
+	{
+		"destination" : 68,
+		"player" : 4,
+		"ticket" : 0,
+		"turn" : 3,
+		"type" : 0
+	},
+	{
+		"destination" : 13,
+		"player" : 0,
+		"ticket" : 1,
+		"turn" : 4,
+		"type" : 0
+	},
+	{
+		"destination" : 95,
+		"player" : 1,
+		"ticket" : 0,
+		"turn" : 4,
+		"type" : 0
+	},
+	{
+		"destination" : 108,
+		"player" : 2,
+		"ticket" : 0,
+		"turn" : 4,
+		"type" : 0
+	},
+	{
+		"destination" : 13,
+		"player" : 3,
+		"ticket" : 2,
+		"turn" : 4,
+		"type" : 0
+	}
+]

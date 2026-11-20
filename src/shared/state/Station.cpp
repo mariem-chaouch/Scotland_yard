@@ -2,10 +2,9 @@
 // Created by 33651 on 15/10/2026.
 //
 #include "Station.h"
-#include <iostream>
 
 state::Station::Station(int id, Point position): id(id), position(position) {
-    std::cout << "--- Constructeur station ---" << std::endl;
+
     taken = false;
 }
 
