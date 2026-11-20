@@ -15,7 +15,7 @@ engine::StartCommand::~StartCommand() {
 bool engine::StartCommand::execute(Engine* engine) {
     state::GameState& game = engine->getState();
 
-    bool isStartLegal = engine->getRules().isLegalStart(game, playerId, station);
+    bool isStartLegal = Rules::isLegalStart(game, playerId, station);
     if (!isStartLegal) {
         return false;
     }

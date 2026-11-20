@@ -39,7 +39,7 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
     if (!isPlayerValid)
         return false;
 
-    if (game.getTurn() == 0) {
+    if (game.getTurn() == FIRST_TURN) {
         return false;
     }
 
@@ -111,23 +111,21 @@ bool Rules::isGameOver(state::GameState& game) {
     std::vector<state::Player*> players = game.getPlayers();
     if (players.empty())
         return true;
-    if (game.getTurn() == 0)
+    if (game.getTurn() == FIRST_TURN) {
         return false;                                   // tour 0 : placement, pas encore commencé
-
-    // Mister X est le joueur 0 : un détective sur sa case = capture
-    int mrxStation = players[MRX_INDEX]->getCurrentStationId();
-    for (int i = MRX_INDEX+1; i < (int) players.size(); i++) {
-        if (players[i]->getCurrentStationId() == mrxStation)
-            return true;
+    }
+    bool MrXIsCaptured = (getCapturer(game) != -1);
+    if (MrXIsCaptured) {
+        return true;
     }
 
-    // Le dernier tour est terminé
-    if (game.getTurn() > LAST_TURN)
+    if (game.getTurn() > LAST_TURN) {
         return true;
+    }
 
-    // Mister X ne peut plus bouger au moment de son tour
-    bool mrxToPlay = (game.getCurrentPlayer() == players[0]);
-    if (mrxToPlay && getLegalMoves(game, 0).empty())
+    bool mrxToPlay = (game.getCurrentPlayer() == players[MRX_INDEX]);
+    bool mrxCantMove = getLegalMoves(game, 0).empty();
+    if (mrxToPlay && mrxCantMove)
         return true;
 
     // Plus aucun détective ne peut bouger
@@ -200,7 +198,7 @@ bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
     if (players.empty())
         return -1;
 
-    int mrxStation = players[0]->getCurrentStationId();
+    int mrxStation = players[MRX_INDEX]->getCurrentStationId();
     for (int i = 1; i < (int) players.size(); i++) {
         if (players[i]->getCurrentStationId() == mrxStation)
             return i;
@@ -223,7 +221,12 @@ bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
     if (game.getTurn() > LAST_TURN)
         return MRX;                                    // il a tenu jusqu'au bout
 
-    if (game.getCurrentPlayer() == players[0] && getLegalMoves(game, 0).empty())
+    if (game.getCurrentPlayer() == players[MRX_INDEX] && getLegalMoves(game, MRX_INDEX
+
+
+
+
+    ).empty())
         return DETECTIVES;                             // Mr X est bloqué
 
     return MRX;                                        // tous les détectives sont bloqués

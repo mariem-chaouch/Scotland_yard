@@ -33,7 +33,7 @@ bool engine::PassCommand::execute(Engine *engine) {
     }
 
     // On ne peut passer que s'il n'existe aucun coup légal
-    bool hasNoLegalMove = engine->getRules().getLegalMoves(gameState, playerId).empty();
+    bool hasNoLegalMove = Rules::getLegalMoves(gameState, playerId).empty();
     return hasNoLegalMove;
 }
 

@@ -17,10 +17,9 @@ engine::DoubleMoveCommand::~DoubleMoveCommand() {
 
 bool engine::DoubleMoveCommand::execute(Engine* engine) {
     state::GameState& game = engine->getState();
-    Rules& rules = engine->getRules();
 
     // Les deux coups sont vérifiés AVANT d'en jouer un seul
-    bool isPlayerDoubleMoveLegal = rules.isLegalDoubleMove(game, playerId,
+    bool isPlayerDoubleMoveLegal = Rules::isLegalDoubleMove(game, playerId,
         firstMoveCommand.getDestination(), firstMoveCommand.getTicket(),
         secondMoveCommand.getDestination(), secondMoveCommand.getTicket());
     if (!isPlayerDoubleMoveLegal) {

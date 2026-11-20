@@ -27,7 +27,7 @@ namespace engine {
     bool MoveCommand::execute(Engine* engine) {
         state::GameState& gameState = engine->getState();
 
-        bool moveIsLegal = engine->getRules().isLegalMove(gameState, playerId, destination, ticket);
+        bool moveIsLegal = Rules::isLegalMove(gameState, playerId, destination, ticket);
         if (!moveIsLegal) {
             return false;                               // coup interdit : rien ne change
         }
@@ -46,7 +46,7 @@ namespace engine {
         // Mister X se montre s'il joue pendant un tour d'apparition
         auto* mrX = dynamic_cast<state::MrX*>(player);
         bool playerIsMrX = (mrX != nullptr);
-        bool mrXShouldRevealPosition = engine->getRules().isRevealTurn(gameState.getTurn());
+        bool mrXShouldRevealPosition = Rules::isRevealTurn(gameState.getTurn());
         if (playerIsMrX && mrXShouldRevealPosition) {
             mrX->setLastKnownStationId(destination);
         }

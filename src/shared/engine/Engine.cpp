@@ -14,11 +14,6 @@ namespace engine {
         return currentState;
     }
 
-    // Donne accès aux règles du jeu
-    Rules& Engine::getRules() {
-        return rules;
-    }
-
     //tour 0 : placement
     void Engine::init() {
         commands.clear();                              // aucune commande en attente
@@ -70,7 +65,7 @@ namespace engine {
     // Exécute les commandes en attente, dans l'ordre d'arrivée
     void Engine::update() {
         for (auto& cmd : commands) {
-            if (rules.isGameOver(currentState))
+            if (Rules::isGameOver(currentState))
                 break;                                  // partie terminée : on ne joue plus
             if (cmd->getPlayerId() != getCurrentPlayerIndex())
                 continue;                               // pas son tour : commande ignorée
