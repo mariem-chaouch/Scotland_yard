@@ -198,4 +198,38 @@ bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
     return true;
 }
 
+    // Numéro du détective qui est sur la case de Mr X (1 à 4), ou -1
+    int Rules::getCapturer(state::GameState& game)  {
+    std::vector<state::Player*> players = game.getPlayers();
+    if (players.empty())
+        return -1;
+
+    int mrxStation = players[0]->getCurrentStationId();
+    for (int i = 1; i < (int) players.size(); i++) {
+        if (players[i]->getCurrentStationId() == mrxStation)
+            return i;
+    }
+    return -1;
+}
+
+    // Qui a gagné ? NONE tant que la partie continue
+    Winner Rules::getWinner(state::GameState& game) {
+    if (!isGameOver(game))
+        return NONE;                                   // la partie continue
+
+    std::vector<state::Player*> players = game.getPlayers();
+    if (players.empty())
+        return NONE;
+
+    if (getCapturer(game) != -1)
+        return DETECTIVES;                             // Mr X est capturé
+
+    if (game.getTurn() > LAST_TURN)
+        return MRX;                                    // il a tenu jusqu'au bout
+
+    if (game.getCurrentPlayer() == players[0] && getLegalMoves(game, 0).empty())
+        return DETECTIVES;                             // Mr X est bloqué
+
+    return MRX;                                        // tous les détectives sont bloqués
+}
 }

@@ -152,5 +152,24 @@ BOOST_AUTO_TEST_CASE(TestLegalStart)
   game.setTurn(1);
   BOOST_CHECK(!engine.getRules().isLegalStart(game, 1, 13));     // plus au tour 0
 }
+BOOST_AUTO_TEST_CASE(TestWinner)
+{
+  Engine engine;
+  placePlayers(engine);                                  // Mr X en 50
+  BOOST_CHECK(engine.getRules().getWinner(engine.getState()) == NONE);       // la partie continue
+  BOOST_CHECK_EQUAL(engine.getRules().getCapturer(engine.getState()), -1);   // personne ne l'a pris
 
+  place(engine, 2, 50);                                  // le détective 2 arrive sur Mr X
+  BOOST_CHECK(engine.getRules().getWinner(engine.getState()) == DETECTIVES);
+  BOOST_CHECK_EQUAL(engine.getRules().getCapturer(engine.getState()), 2);
+}
+
+BOOST_AUTO_TEST_CASE(TestMrXWinsAfterLastTurn)
+{
+  Engine engine;
+  placePlayers(engine);
+  engine.getState().setTurn(25);                         // les 24 tours sont passés
+  BOOST_CHECK(engine.getRules().getWinner(engine.getState()) == MRX);
+  BOOST_CHECK_EQUAL(engine.getRules().getCapturer(engine.getState()), -1);
+}
 /* vim: set sw=2 sts=2 et : */

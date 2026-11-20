@@ -150,5 +150,20 @@ BOOST_AUTO_TEST_CASE(TestNoMoveAfterGameOver)
   BOOST_CHECK_EQUAL(stationOf(engine, 0), 50);                // Mister X n'a pas bougé
   BOOST_CHECK_EQUAL(engine.getRecord().size(), 5u);           // seulement les 5 placements
 }
+BOOST_AUTO_TEST_CASE(TestCommandGetters)
+{
+  MoveCommand move(2, 14, TaxiTicket);
+  BOOST_CHECK_EQUAL(move.getPlayerId(), 2);
+  BOOST_CHECK(move.getCommandType() == MOVE);
+  move.setPlayerId(3);
+  BOOST_CHECK_EQUAL(move.getPlayerId(), 3);
 
+  StartCommand start(0, 50);
+  BOOST_CHECK(start.getCommandType() == START);
+  BOOST_CHECK_EQUAL(start.serialize()["station"].asInt(), 50);
+
+  PassCommand pass(1);
+  BOOST_CHECK(pass.getCommandType() == PASS);
+  BOOST_CHECK_EQUAL(pass.serialize()["player"].asInt(), 1);
+}
 /* vim: set sw=2 sts=2 et : */
