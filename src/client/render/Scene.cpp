@@ -69,6 +69,26 @@ namespace render {
 
                     window.setView(sf::View(visibleArea));
                 }
+
+                if (event.type == sf::Event::MouseButtonPressed &&
+                        event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i pixelPosition(
+                        event.mouseButton.x,
+                        event.mouseButton.y
+                    );
+
+                    sf::Vector2f worldPosition =
+                        window.mapPixelToCoords(pixelPosition);
+
+                    // Temporarily display buttons at the click position
+                    auto* boardLayer = dynamic_cast<BoardLayer*>(layers[0].get());
+
+                    if (boardLayer)
+                    {
+                        boardLayer->showSelectionAt(worldPosition);
+                    }
+                }
             }
             drawScene();
         }
