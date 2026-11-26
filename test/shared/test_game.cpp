@@ -15,22 +15,22 @@ using namespace ::state;
 
 BOOST_AUTO_TEST_CASE(TestGameConstructor)
 {
-    GameState g;
-    BOOST_CHECK_EQUAL(g.getTurn(), 0);   // 0 = placement initial
+    GameState gameState;
+    BOOST_CHECK_EQUAL(gameState.getTurn(), 0);   // 0 = placement initial
 }
 
 BOOST_AUTO_TEST_CASE(TestGameBoard)
 {
-    GameState g;
-    const Board& b1 = g.getBoard();
-    const Board& b2 = g.getBoard();
+    GameState gameState;
+    const Board& b1 = gameState.getBoard();
+    const Board& b2 = gameState.getBoard();
     BOOST_CHECK_EQUAL(&b1, &b2);   // même Board renvoyé par référence
 }
 
 BOOST_AUTO_TEST_CASE(TestGamePlayers)
 {
-    GameState g;
-    std::vector<Player*> players = g.getPlayers();
+    GameState gameState;
+    std::vector<Player*> players = gameState.getPlayers();
 
     BOOST_REQUIRE_EQUAL(players.size(), 5);
     BOOST_CHECK(dynamic_cast<MrX*>(players[0]) != nullptr);
@@ -46,9 +46,9 @@ BOOST_AUTO_TEST_CASE(TestGameDestructor)
 {
     // Le destructeur est exécuté en sortie de portée (delete des joueurs)
     {
-        GameState g;
+        GameState gameState;
     }
-    GameState* g = new GameState();
-    delete g;
+    GameState* gameState = new GameState();
+    delete gameState;
     BOOST_CHECK(true);
 }

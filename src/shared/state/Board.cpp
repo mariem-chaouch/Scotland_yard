@@ -19,12 +19,14 @@ Board::Board ( )
         throw std::runtime_error("Cannot open ../resources/pos.txt");
     }
 
-    int station_nbr, id, x, y;
+    int station_nbr, id;
+    float x, y;
     pos_file >> station_nbr;
     for (int i = 0; i < station_nbr; i++) {
         pos_file >> id;
         pos_file >> x;
         pos_file >> y;
+        std::cout << id << "\t" << x << "\t" << y << std::endl;
         addStation(Station(id, {.x = x, .y = y}));
         //std::cout << x<< "\t" << y << std::endl;
     }
@@ -132,6 +134,17 @@ bool Board::areConnected (int station1Id, int station2Id) const
 }
 
 const Station& Board::getStation (int stationId) const
+{
+    auto it = stationVertices.find(stationId);
+
+    if (it == stationVertices.end())
+    {
+        throw std::invalid_argument("Station does not exist");
+    }
+    return transportMap[it->second];
+}
+
+Station& Board::getStation (int stationId)
 {
     auto it = stationVertices.find(stationId);
 
