@@ -15,10 +15,20 @@ BOOST_AUTO_TEST_CASE(TestSceneConstruction)
   );
 }
 
-BOOST_AUTO_TEST_CASE(TestSceneRun)
+BOOST_AUTO_TEST_CASE(TestSceneDrawFrame)
 {
-    GameState gameState;
+  GameState gameState;
+  Scene scene(gameState);
 
-    Scene scene(gameState);
-    scene.runScene();
+  BOOST_REQUIRE_NO_THROW(scene.initScene());
+  BOOST_CHECK_NO_THROW(scene.drawScene());
+}
+
+BOOST_AUTO_TEST_CASE(TestSceneRunReturnsWhenWindowIsClosed)
+{
+  GameState gameState;
+  Scene scene(gameState);
+  scene.window.close();
+
+  BOOST_CHECK_NO_THROW(scene.runScene());
 }

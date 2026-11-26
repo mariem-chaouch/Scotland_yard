@@ -7,7 +7,7 @@
 void testSFML() {
     sf::Texture texture;
 }
-// end of test SFML
+// LCOV_EXCL_STOP
 
 #include <state.h>
 #include "render.h"

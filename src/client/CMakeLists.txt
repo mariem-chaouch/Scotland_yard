@@ -45,6 +45,7 @@ target_compile_options(${client_target} PUBLIC
 
 if(BUILD_CODE_COVERAGE)
   add_dependencies(code-coverage ${client_target})
+  add_dependencies(code-coverage-gcov ${client_target})
 endif()
 
 # vim: set sw=2 sts=2 et:

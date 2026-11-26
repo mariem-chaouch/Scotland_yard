@@ -79,6 +79,8 @@ BOOST_AUTO_TEST_CASE(TestMrXBlackTickets)
     x.useTransportTicket(BlackTicket);
   }
   BOOST_CHECK(!x.hasBlackTicket());
+  x.useTransportTicket(BlackTicket);
+  BOOST_CHECK(!x.hasBlackTicket());
 }
 
 BOOST_AUTO_TEST_CASE(TestMrXNormalTicketsDontUseBlack)
@@ -122,8 +124,23 @@ BOOST_AUTO_TEST_CASE(TestDetectiveBusAndBlackTickets)
   Detective d("vert");
   for (int i = 0; i < 8; i++) d.useTransportTicket(BusTicket);   // 8 tickets bus au départ
   BOOST_CHECK(!d.hasTicket(BusTicket));
+  d.useTransportTicket(BusTicket);
+  BOOST_CHECK(!d.hasTicket(BusTicket));
 
   d.useTransportTicket(BlackTicket);       // un détective ne peut pas l'utiliser : rien ne change
   BOOST_CHECK(d.hasTicket(TaxiTicket));
   BOOST_CHECK(d.hasTicket(TrainTicket));
+}
+
+BOOST_AUTO_TEST_CASE(TestDetectiveUsesAllTaxiTickets)
+{
+  Detective d("vert");
+  for (int i = 0; i < 11; ++i) {
+    BOOST_REQUIRE(d.hasTicket(TaxiTicket));
+    d.useTransportTicket(TaxiTicket);
+  }
+
+  BOOST_CHECK(!d.hasTicket(TaxiTicket));
+  d.useTransportTicket(TaxiTicket);
+  BOOST_CHECK(!d.hasTicket(TaxiTicket));
 }
