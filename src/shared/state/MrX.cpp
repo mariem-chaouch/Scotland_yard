@@ -24,5 +24,8 @@ namespace state {
     void MrX::useTransportTicket(Ticket ticket) {
         if (ticket == BlackTicket && nb_black_tickets > 0) nb_black_tickets--;
     }
-
+    std::vector<std::pair<int, Ticket>> MrX::getHistory ()
+    {
+        return history;
+    }
 }

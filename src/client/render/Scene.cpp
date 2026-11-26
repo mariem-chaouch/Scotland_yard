@@ -15,7 +15,7 @@ namespace render {
         BoardLayer* boardLayerPtr = boardLayer.get();
         layers.push_back(std::move(boardLayer));
         layers.push_back(std::make_unique<PlayersLayer>(gameState, *boardLayerPtr));
-        layers.push_back(std::make_unique<InfoLayer>());
+        layers.push_back(std::make_unique<InfoLayer>(gameState));
     }
 
     void Scene::initScene()
