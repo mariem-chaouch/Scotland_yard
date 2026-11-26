@@ -12,41 +12,62 @@
 using namespace state;
 
 Board::Board ( )
-{   
-    
-    std::ifstream file(RESOURCE_DIR "/pos.txt");
+{
+    std::ifstream pos_file(std::string(RESOURCE_DIR) + "/pos.txt");
 
-    if (!file.is_open()) {
-        throw std::runtime_error(
-            "Impossible d'ouvrir pos.txt"
-        );
+    if (!pos_file.is_open()) {
+        throw std::runtime_error("Cannot open ../resources/pos.txt");
     }
 
-    int nbStations;
-    file >> nbStations;
-
-    int id;
+    int station_nbr, id;
     float x, y;
-    int count = 0;
-
-    while (file >> id >> x >> y)
-    {
+    pos_file >> station_nbr;
+    for (int i = 0; i < station_nbr; i++) {
+        pos_file >> id;
+        pos_file >> x;
+        pos_file >> y;
+        std::cout << id << "\t" << x << "\t" << y << std::endl;
         addStation(Station(id, {.x = x, .y = y}));
-        count++;
+        //std::cout << x<< "\t" << y << std::endl;
     }
 
-    std::cout << "Stations chargees : "
-              << count << " / "
-              << nbStations << std::endl;
-/*
-    addConnection(0, 1, Connection(Taxi));
-    addConnection(1, 2, Connection(Bus));
-    addConnection(0, 3, Connection(Bus));
-    addConnection(1, 3, Connection(Taxi));
-    addConnection(1, 4, Connection(Train));
-    addConnection(2, 4, Connection(Bus));
-    addConnection(3, 4, Connection(Taxi));
-    addConnection(4, 5, Connection(Bus));*/
+    pos_file.close();
+
+    int connection_nbr, station1, station2;
+    std::string mean;
+    Transport transport;
+
+    std::ifstream graph_file(std::string(RESOURCE_DIR) + "/graph.txt");
+
+    if (!graph_file.is_open()) {
+        throw std::runtime_error("Cannot open ../resources/graph.txt");
+    }
+
+    graph_file >> station_nbr;
+    graph_file >> connection_nbr;
+    for (int i = 0; i < connection_nbr; i++) {
+        graph_file >> station1;
+        graph_file >> station2;
+        graph_file >> mean;
+
+        if (mean == "Taxi") {
+            transport = Taxi;
+        } else if (mean == "Bus") {
+            transport = Bus;
+        } else if (mean == "Train") {
+            transport = Train;
+        }else if (mean == "Boat") {
+            transport = Boat;
+        } else {
+            std::cerr << "Unknown transport: " << mean << std::endl;
+            continue;
+        }
+
+        addConnection(station1, station2, Connection(transport));
+        std::cout << station1<< "\t" << station2 << "\t" << mean<< std::endl;
+    }
+
+    graph_file.close();
 }
 
 Board::~Board () = default;

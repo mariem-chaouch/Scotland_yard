@@ -5,7 +5,6 @@
 #include <iostream>
 
 state::Station::Station(int id, Point position): id(id), position(position) {
-    std::cout << "--- Constructeur station ---" << std::endl;
     taken = false;
 }
 

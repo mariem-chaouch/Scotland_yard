@@ -78,7 +78,7 @@ namespace render {
                         event.mouseButton.y
                     );
 
-                    sf::Vector2f worldPosition =
+                    sf::Vector2f mouseWorld =
                         window.mapPixelToCoords(pixelPosition);
 
                     // Temporarily display buttons at the click position
@@ -86,7 +86,7 @@ namespace render {
 
                     if (boardLayer)
                     {
-                        boardLayer->showSelectionAt(worldPosition);
+                        boardLayer->selectStationAt(mouseWorld);
                     }
                 }
             }
