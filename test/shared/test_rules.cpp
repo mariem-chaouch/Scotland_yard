@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(TestWinner)
   Engine engine;
   placePlayers(engine);                                  // Mr X en 50
   BOOST_CHECK(Rules::getWinner(engine.getState()) == NONE);       // la partie continue
-  BOOST_CHECK_EQUAL(Rules::getCapturer(engine.getState()), -1);   // personne ne l'a pris
+  BOOST_CHECK_EQUAL(Rules::getCapturer(engine.getState()), -1);   // personne ne l'a pris*
 
   place(engine, 2, 50);                                  // le détective 2 arrive sur Mr X
   BOOST_CHECK(Rules::getWinner(engine.getState()) == DETECTIVES);

@@ -22,7 +22,8 @@ namespace engine {
         std::vector<state::Player*> players = currentState.getPlayers();
         if (players.empty())
             return;
-
+        for (state::Player* player : players)
+            player->setCurrentStationId(0);
         currentState.setTurn(0);                       // tour 0 : placement
         currentState.setCurrentPlayer(players[0]);     // Mister X se place en premier
     }

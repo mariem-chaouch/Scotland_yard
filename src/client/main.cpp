@@ -3,7 +3,7 @@
 #include <random>
 #include <memory>
 #include <string>
-
+#include "render.h"
 // The following lines are here to check that SFML is installed and working
 #include <SFML/Graphics.hpp>
 
@@ -18,7 +18,7 @@ void testSFML() {
 
 using namespace std;
 using namespace state;
-
+using namespace render;
 // Nom lisible d'un ticket
 static string ticketName(Ticket t) {
     switch (t) {
@@ -34,7 +34,12 @@ static string ticketName(Ticket t) {
 static string playerName(int i) {
     return (i == 0) ? "Mister X" : "Detective " + to_string(i);
 }
-
+// Mode "render" : la fenêtre graphique (travail d'Adam)
+static void runRender() {
+    GameState gameState;
+    Scene scene(gameState);
+    scene.runScene();
+}
 // Mode "board" : l'ancien test du plateau
 static void runBoardDemo() {
     Board board;
@@ -120,13 +125,15 @@ static void runEngineDemo(unsigned int seed) {
 
 int main(int argc, char* argv[])
 {
-    string mode = (argc >= 2) ? argv[1] : "board";
+    string mode = (argc >= 2) ? argv[1] : "render";
 
     if (mode == "engine") {
         unsigned int seed = (argc >= 3) ? stoul(argv[2]) : random_device{}();
         runEngineDemo(seed);
-    } else {
+    } else if (mode == "board") {
         runBoardDemo();
+    } else {
+        runRender();                       // par défaut : la fenêtre graphique
     }
     return 0;
 }

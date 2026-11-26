@@ -177,6 +177,20 @@ BOOST_AUTO_TEST_CASE(TestDetectiveCanCaptureMrX)
   engine.getState().getPlayers()[1]->setCurrentStationId(50);           // détective 1 juste à côté
   BOOST_CHECK(Rules::isLegalMove(engine.getState(), 1, 49, TaxiTicket)); // il peut l'attraper
 }
+BOOST_AUTO_TEST_CASE(TestDoubleMoveRefused)
+{
+  Engine engine;
+  placeAll(engine);                                           // Mr X en 50
+
+  // 50 → 49 est possible, mais 49 → 1 n'existe pas : tout le coup double est refusé
+  engine.addCommand(std::make_unique<DoubleMoveCommand>(0, 49, TaxiTicket, 1, TaxiTicket));
+  engine.update();
+
+  BOOST_CHECK_EQUAL(stationOf(engine, 0), 50);                // Mr X n'a même pas fait le 1er coup
+  BOOST_CHECK_EQUAL(engine.getCurrentPlayerIndex(), 0);       // c'est toujours à lui
+  BOOST_CHECK_EQUAL(engine.getState().getTurn(), 1);          // le tour n'a pas avancé
+  BOOST_CHECK_EQUAL(engine.getRecord().size(), 5u);           // rien de noté
+}
 /* vim: set sw=2 sts=2 et : */
 
 BOOST_AUTO_TEST_CASE(TestPassCommandExecute)
