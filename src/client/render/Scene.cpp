@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include <iostream>
+
 #include "BoardLayer.h"
 #include "InfoLayer.h"
 #include "MainMenuLayer.h"
@@ -99,7 +101,29 @@ namespace render {
 
                         if (boardLayer)
                         {
-                            boardLayer->selectStationAt(mouseWorld);
+                            int transport = boardLayer->getTransportFromSelection(mouseWorld);
+
+                            if (transport != -1)
+                            {
+                                switch (transport)
+                                {
+                                    case 0:
+                                        std::cout << "Taxi selected!" << std::endl;
+                                        break;
+
+                                    case 1:
+                                        std::cout << "Train selected!" << std::endl;
+                                        break;
+
+                                    case 2:
+                                        std::cout << "Bus selected!" << std::endl;
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                boardLayer->selectStationAt(mouseWorld);
+                            }
                         }
                     }
                 }
