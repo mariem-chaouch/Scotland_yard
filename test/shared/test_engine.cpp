@@ -178,3 +178,43 @@ BOOST_AUTO_TEST_CASE(TestDetectiveCanCaptureMrX)
   BOOST_CHECK(Rules::isLegalMove(engine.getState(), 1, 49, TaxiTicket)); // il peut l'attraper
 }
 /* vim: set sw=2 sts=2 et : */
+
+BOOST_AUTO_TEST_CASE(TestPassCommandExecute)
+{
+  Engine engine;
+  engine.init();                                       // tour 0
+
+  PassCommand atTurnZero(1);
+  BOOST_CHECK(!atTurnZero.execute(&engine));           // l.26 : pas de passe au tour 0
+
+  placeAll(engine);                                    // tour 1
+
+  PassCommand unknown(99);
+  BOOST_CHECK(!unknown.execute(&engine));              // l.22 : joueur inexistant
+  PassCommand negative(-1);
+  BOOST_CHECK(!negative.execute(&engine));
+
+  PassCommand mrx(0);
+  BOOST_CHECK(!mrx.execute(&engine));                  // Mister X ne passe jamais
+
+  PassCommand detectiveFree(1);
+  BOOST_CHECK(!detectiveFree.execute(&engine));        // l.36-37 : il peut bouger, refusé
+
+  engine.getState().getPlayers()[1]->setCurrentStationId(0);  // plus aucun coup possible
+  PassCommand detectiveBlocked(1);
+  BOOST_CHECK(detectiveBlocked.execute(&engine));      // l.36-37 : il peut passer
+}
+
+BOOST_AUTO_TEST_CASE(TestDoubleMoveExecuteIllegal)
+{
+  Engine engine;
+  placeAll(engine);
+  engine.getState().setTurn(3);
+
+  DoubleMoveCommand badFirst(0, 1, TaxiTicket, 66, TaxiTicket);   // 50-1 pas reliées
+  BOOST_CHECK(!badFirst.execute(&engine));
+  BOOST_CHECK_EQUAL(stationOf(engine, 0), 50);
+  BOOST_CHECK_EQUAL(engine.getState().getTurn(), 3);
+}
+
+

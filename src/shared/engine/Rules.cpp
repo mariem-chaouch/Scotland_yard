@@ -111,7 +111,7 @@ bool Rules::isRevealTurn(int turn) {
 bool Rules::isGameOver(state::GameState& game) {
     std::vector<state::Player*> players = game.getPlayers();
     if (players.empty())
-        return true;
+        return true;                                    // LCOV_EXCL_LINE : GameState a toujours des joueurs
     if (game.getTurn() == FIRST_TURN) {
         return false;                                   // tour 0 : placement, pas encore commencé
     }
@@ -197,7 +197,7 @@ bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
     int Rules::getCapturer(state::GameState& game)  {
     std::vector<state::Player*> players = game.getPlayers();
     if (players.empty())
-        return -1;
+        return -1;                                      // LCOV_EXCL_LINE : GameState a toujours des joueurs
 
     int mrxStation = players[MRX_INDEX]->getCurrentStationId();
     for (int i = 1; i < (int) players.size(); i++) {
@@ -214,7 +214,7 @@ bool Rules::isLegalStart(state::GameState& game, int playerId, int station) {
 
     std::vector<state::Player*> players = game.getPlayers();
     if (players.empty())
-        return NONE;
+        return NONE;                                    // LCOV_EXCL_LINE : GameState a toujours des joueurs
 
     if (getCapturer(game) != -1)
         return DETECTIVES;                             // Mr X est capturé
