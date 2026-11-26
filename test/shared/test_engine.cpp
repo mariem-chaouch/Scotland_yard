@@ -157,7 +157,8 @@ BOOST_AUTO_TEST_CASE(TestCommandGetters)
   BOOST_CHECK(move.getCommandType() == MOVE);
   move.setPlayerId(3);
   BOOST_CHECK_EQUAL(move.getPlayerId(), 3);
-
+  move.setCommandType(PASS);
+  BOOST_CHECK(move.getCommandType() == PASS);
   StartCommand start(0, 50);
   BOOST_CHECK(start.getCommandType() == START);
   BOOST_CHECK_EQUAL(start.serialize()["station"].asInt(), 50);
@@ -165,5 +166,15 @@ BOOST_AUTO_TEST_CASE(TestCommandGetters)
   PassCommand pass(1);
   BOOST_CHECK(pass.getCommandType() == PASS);
   BOOST_CHECK_EQUAL(pass.serialize()["player"].asInt(), 1);
+}
+BOOST_AUTO_TEST_CASE(TestDetectiveCanCaptureMrX)
+{
+  Engine engine;
+  placeAll(engine);
+  engine.addCommand(std::make_unique<MoveCommand>(0, 49, TaxiTicket));  // Mr X : 50 → 49
+  engine.update();
+
+  engine.getState().getPlayers()[1]->setCurrentStationId(50);           // détective 1 juste à côté
+  BOOST_CHECK(Rules::isLegalMove(engine.getState(), 1, 49, TaxiTicket)); // il peut l'attraper
 }
 /* vim: set sw=2 sts=2 et : */
