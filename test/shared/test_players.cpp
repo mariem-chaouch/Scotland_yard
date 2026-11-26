@@ -32,12 +32,6 @@ BOOST_AUTO_TEST_CASE(TestPlayerMakeMove)
   BOOST_CHECK_EQUAL(d.getCurrentStationId(), 14);
 }
 
-BOOST_AUTO_TEST_CASE(TestPlayerBaseUseTicket)
-{
-  Player p("blanc");
-  BOOST_CHECK(p.makeMove(5, TaxiTicket));   // appelle Player::useTransportTicket
-  BOOST_CHECK_EQUAL(p.getCurrentStationId(), 5);
-}
 
 // ---------- Detective ----------
 
@@ -84,7 +78,7 @@ BOOST_AUTO_TEST_CASE(TestDetectiveBusAndBlackTickets)
 BOOST_AUTO_TEST_CASE(TestMrXStartTickets)
 {
   MrX x("noir");
-  BOOST_CHECK(x.hasBlackTicket());
+  BOOST_CHECK(x.hasTicket(BlackTicket));
   BOOST_CHECK(x.hasDoubleTicket());
 }
 
@@ -92,17 +86,17 @@ BOOST_AUTO_TEST_CASE(TestMrXBlackTickets)
 {
   MrX x("noir");
   for (int i = 0; i < 5; i++) {             // 5 Black Tickets au départ
-    BOOST_CHECK(x.hasBlackTicket());
+    BOOST_CHECK(x.hasTicket(BlackTicket));
     x.useTransportTicket(BlackTicket);
   }
-  BOOST_CHECK(!x.hasBlackTicket());
+  BOOST_CHECK(!x.hasTicket(BlackTicket));
 }
 
 BOOST_AUTO_TEST_CASE(TestMrXNormalTicketsDontUseBlack)
 {
   MrX x("noir");
   for (int i = 0; i < 10; i++) x.useTransportTicket(TaxiTicket);  // pioche commune
-  BOOST_CHECK(x.hasBlackTicket());          // aucun Black Ticket consommé
+  BOOST_CHECK(x.hasTicket(BlackTicket));          // aucun Black Ticket consommé
 }
 
 BOOST_AUTO_TEST_CASE(TestMrXDoubleTickets)
@@ -141,7 +135,7 @@ BOOST_AUTO_TEST_CASE(TestPolymorphismThroughPlayerPointer)
 
   MrX* x = dynamic_cast<MrX*>(p.get());
   BOOST_REQUIRE(x != nullptr);
-  BOOST_CHECK(!x->hasBlackTicket());        // prouve que MrX::useTransportTicket a été appelé
+  BOOST_CHECK(!x->hasTicket(BlackTicket));        // prouve que MrX::useTransportTicket a été appelé
 }
 
 /* vim: set sw=2 sts=2 et : */

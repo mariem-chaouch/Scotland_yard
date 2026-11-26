@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(TestInitStartsAtTurnZero)
   engine.init();
   BOOST_CHECK_EQUAL(engine.getState().getTurn(), 0);
   BOOST_CHECK_EQUAL(engine.getCurrentPlayerIndex(), 0);
-  BOOST_CHECK(!engine.getRules().isGameOver(engine.getState()));   // pas fini au tour 0
+  BOOST_CHECK(!Rules::isGameOver(engine.getState()));   // pas fini au tour 0
 }
 
 BOOST_AUTO_TEST_CASE(TestLegalMoveTaxi)
@@ -56,8 +56,8 @@ BOOST_AUTO_TEST_CASE(TestLegalMoveTaxi)
   place(engine, 0, 77);
   GameState& game = engine.getState();
 
-  BOOST_CHECK(engine.getRules().isLegalMove(game, 0, 78, TaxiTicket));   // 77-78 taxi
-  BOOST_CHECK(!engine.getRules().isLegalMove(game, 0, 1, TaxiTicket));   // 77-1 pas reliées
+  BOOST_CHECK(Rules::isLegalMove(game, 0, 78, TaxiTicket));   // 77-78 taxi
+  BOOST_CHECK(!Rules::isLegalMove(game, 0, 1, TaxiTicket));   // 77-1 pas reliées
 }
 
 BOOST_AUTO_TEST_CASE(TestStationTakenByDetective)
@@ -69,16 +69,16 @@ BOOST_AUTO_TEST_CASE(TestStationTakenByDetective)
   GameState& game = engine.getState();
 
   BOOST_CHECK(game.getBoard().isStationTaken(78));
-  BOOST_CHECK(!engine.getRules().isLegalMove(game, 0, 78, TaxiTicket));
+  BOOST_CHECK(!Rules::isLegalMove(game, 0, 78, TaxiTicket));
 }
 
 BOOST_AUTO_TEST_CASE(TestGameOverWhenCaught)
 {
   Engine engine;
   placePlayers(engine);
-  BOOST_CHECK(!engine.getRules().isGameOver(engine.getState()));
+  BOOST_CHECK(!Rules::isGameOver(engine.getState()));
   place(engine, 1, 50);                                    // détective sur Mister X
-  BOOST_CHECK(engine.getRules().isGameOver(engine.getState()));
+  BOOST_CHECK(Rules::isGameOver(engine.getState()));
 }
 
 BOOST_AUTO_TEST_CASE(TestMrXMoves)
@@ -88,43 +88,43 @@ BOOST_AUTO_TEST_CASE(TestMrXMoves)
   place(engine, 0, 1);
   GameState& game = engine.getState();
 
-  BOOST_CHECK(engine.getRules().isLegalMove(game, 0, 46, TrainTicket));  // 1-46 métro
-  BOOST_CHECK(engine.getRules().isLegalMove(game, 0, 46, BlackTicket));  // Black = tout
+  BOOST_CHECK(Rules::isLegalMove(game, 0, 46, TrainTicket));  // 1-46 métro
+  BOOST_CHECK(Rules::isLegalMove(game, 0, 46, BlackTicket));  // Black = tout
 
   place(engine, 0, 194);
-  BOOST_CHECK(engine.getRules().isLegalMove(game, 0, 157, BlackTicket)); // 194-157 bateau
-  BOOST_CHECK(!engine.getRules().isLegalMove(game, 0, 157, TaxiTicket));
+  BOOST_CHECK(Rules::isLegalMove(game, 0, 157, BlackTicket)); // 194-157 bateau
+  BOOST_CHECK(!Rules::isLegalMove(game, 0, 157, TaxiTicket));
 }
 
 BOOST_AUTO_TEST_CASE(TestDetectiveTrain)
 {
   Engine engine;
   placePlayers(engine);                                    // détective 1 en 13
-  BOOST_CHECK(engine.getRules().isLegalMove(engine.getState(), 1, 46, TrainTicket)); // 13-46 métro
+  BOOST_CHECK(Rules::isLegalMove(engine.getState(), 1, 46, TrainTicket)); // 13-46 métro
 }
 
 BOOST_AUTO_TEST_CASE(TestUnknownPlayer)
 {
   Engine engine;
   placePlayers(engine);
-  BOOST_CHECK(!engine.getRules().isLegalMove(engine.getState(), 99, 49, TaxiTicket));
+  BOOST_CHECK(!Rules::isLegalMove(engine.getState(), 99, 49, TaxiTicket));
 }
 
 BOOST_AUTO_TEST_CASE(TestLegalMovesList)
 {
   Engine engine;
   placePlayers(engine);
-  BOOST_CHECK(!engine.getRules().getLegalMoves(engine.getState(), 0).empty());  // Mister X peut bouger
-  BOOST_CHECK(engine.getRules().getLegalMoves(engine.getState(), 99).empty());  // joueur inconnu
+  BOOST_CHECK(!Rules::getLegalMoves(engine.getState(), 0).empty());  // Mister X peut bouger
+  BOOST_CHECK(Rules::getLegalMoves(engine.getState(), 99).empty());  // joueur inconnu
 }
 
 BOOST_AUTO_TEST_CASE(TestGameContinuesThenEnds)
 {
   Engine engine;
   placePlayers(engine);
-  BOOST_CHECK(!engine.getRules().isGameOver(engine.getState()));
+  BOOST_CHECK(!Rules::isGameOver(engine.getState()));
   engine.getState().setTurn(25);                           // après le dernier tour
-  BOOST_CHECK(engine.getRules().isGameOver(engine.getState()));
+  BOOST_CHECK(Rules::isGameOver(engine.getState()));
 }
 
 BOOST_AUTO_TEST_CASE(TestDoubleMove)
@@ -134,8 +134,8 @@ BOOST_AUTO_TEST_CASE(TestDoubleMove)
   place(engine, 0, 1);
   GameState& game = engine.getState();
 
-  BOOST_CHECK(engine.getRules().isLegalDoubleMove(game, 0, 8, TaxiTicket, 18, TaxiTicket));  // 1→8→18
-  BOOST_CHECK(!engine.getRules().isLegalDoubleMove(game, 1, 14, TaxiTicket, 15, TaxiTicket)); // détective
+  BOOST_CHECK(Rules::isLegalDoubleMove(game, 0, 8, TaxiTicket, 18, TaxiTicket));  // 1→8→18
+  BOOST_CHECK(!Rules::isLegalDoubleMove(game, 1, 14, TaxiTicket, 15, TaxiTicket)); // détective
   BOOST_CHECK_EQUAL(game.getPlayers()[0]->getCurrentStationId(), 1);   // la simulation a remis Mister X en 1
 }
 
@@ -145,23 +145,23 @@ BOOST_AUTO_TEST_CASE(TestLegalStart)
   engine.init();
   GameState& game = engine.getState();
 
-  BOOST_CHECK(engine.getRules().isLegalStart(game, 0, 50));      // carte Départ
-  BOOST_CHECK(!engine.getRules().isLegalStart(game, 0, 1));      // pas une carte Départ
+  BOOST_CHECK(Rules::isLegalStart(game, 0, 50));      // carte Départ
+  BOOST_CHECK(!Rules::isLegalStart(game, 0, 1));      // pas une carte Départ
   place(engine, 0, 50);
-  BOOST_CHECK(!engine.getRules().isLegalStart(game, 1, 50));     // déjà prise
+  BOOST_CHECK(!Rules::isLegalStart(game, 1, 50));     // déjà prise
   game.setTurn(1);
-  BOOST_CHECK(!engine.getRules().isLegalStart(game, 1, 13));     // plus au tour 0
+  BOOST_CHECK(!Rules::isLegalStart(game, 1, 13));     // plus au tour 0
 }
 BOOST_AUTO_TEST_CASE(TestWinner)
 {
   Engine engine;
   placePlayers(engine);                                  // Mr X en 50
-  BOOST_CHECK(engine.getRules().getWinner(engine.getState()) == NONE);       // la partie continue
-  BOOST_CHECK_EQUAL(engine.getRules().getCapturer(engine.getState()), -1);   // personne ne l'a pris
+  BOOST_CHECK(Rules::getWinner(engine.getState()) == NONE);       // la partie continue
+  BOOST_CHECK_EQUAL(Rules::getCapturer(engine.getState()), -1);   // personne ne l'a pris
 
   place(engine, 2, 50);                                  // le détective 2 arrive sur Mr X
-  BOOST_CHECK(engine.getRules().getWinner(engine.getState()) == DETECTIVES);
-  BOOST_CHECK_EQUAL(engine.getRules().getCapturer(engine.getState()), 2);
+  BOOST_CHECK(Rules::getWinner(engine.getState()) == DETECTIVES);
+  BOOST_CHECK_EQUAL(Rules::getCapturer(engine.getState()), 2);
 }
 
 BOOST_AUTO_TEST_CASE(TestMrXWinsAfterLastTurn)
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(TestMrXWinsAfterLastTurn)
   Engine engine;
   placePlayers(engine);
   engine.getState().setTurn(25);                         // les 24 tours sont passés
-  BOOST_CHECK(engine.getRules().getWinner(engine.getState()) == MRX);
-  BOOST_CHECK_EQUAL(engine.getRules().getCapturer(engine.getState()), -1);
+  BOOST_CHECK(Rules::getWinner(engine.getState()) == MRX);
+  BOOST_CHECK_EQUAL(Rules::getCapturer(engine.getState()), -1);
 }
 /* vim: set sw=2 sts=2 et : */
