@@ -13,39 +13,49 @@ namespace render {
 
     void InfoLayer::init()
     {
-        // Load emptyMove texture
+        // Load moves textures
         textures.push_back(std::make_unique<sf::Texture>());
-
-        // Load ticket textures
-        if (!textures.back()->loadFromFile(RESOURCE_DIR "/emptyMove.png"))
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/move_none.png"))
             throw std::runtime_error("Failed to load emptyMove.png");
 
         textures.push_back(std::make_unique<sf::Texture>());
-
-        if (!textures.back()->loadFromFile(RESOURCE_DIR "/taxiMove.png"))
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/move_taxi.png"))
             throw std::runtime_error("Failed to load busMove.png");
 
         textures.push_back(std::make_unique<sf::Texture>());
-        if (!textures.back()->loadFromFile(RESOURCE_DIR "/busMove.png"))
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/move_bus.png"))
             throw std::runtime_error("Failed to load busMove.png");
 
         textures.push_back(std::make_unique<sf::Texture>());
-        if (!textures.back()->loadFromFile(RESOURCE_DIR "/trainMove.png"))
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/move_train.png"))
             throw std::runtime_error("Failed to load busMove.png");
 
         textures.push_back(std::make_unique<sf::Texture>());
-        if (!textures.back()->loadFromFile(RESOURCE_DIR "/blackMove.png"))
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/move_black.png"))
             throw std::runtime_error("Failed to load busMove.png");
 
+        // Load ticket textures
+        textures.push_back(std::make_unique<sf::Texture>());
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/ticket_taxi.png"))
+            throw std::runtime_error("Failed to load busMove.png");
 
+        textures.push_back(std::make_unique<sf::Texture>());
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/ticket_bus.png"))
+            throw std::runtime_error("Failed to load busMove.png");
+
+        textures.push_back(std::make_unique<sf::Texture>());
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/ticket_train.png"))
+            throw std::runtime_error("Failed to load busMove.png");
+
+        textures.push_back(std::make_unique<sf::Texture>());
+        if (!textures.back()->loadFromFile(RESOURCE_DIR "/ticket_black.png"))
+            throw std::runtime_error("Failed to load busMove.png");
 
         // Create 24 emptyMove sprites
         for (int i = 0; i < 24; ++i)
         {
             sprites.emplace_back(*textures[0]);
         }
-
-
 
         if (!font.loadFromFile(RESOURCE_DIR "/arial.ttf"))
             throw std::runtime_error("Failed to load font");
@@ -56,7 +66,7 @@ namespace render {
             int nbTicket = currentplayer->getNbOfTickets(static_cast<state::Ticket>(i));
             if (nbTicket != -1) {
                 //Ticket counters
-                sprites.emplace_back(*textures[1+i]);
+                sprites.emplace_back(*textures[5+i]);
                 texts.emplace_back(std::to_string(nbTicket), font, 22);
                 texts.back().setFillColor(sf::Color::White);
             }
