@@ -5,11 +5,8 @@ namespace engine {
     // Constructeur : l'historique commence comme un tableau JSON vide
     Engine::Engine() : record(Json::arrayValue) {}
 
-    // Destructeur : les commandes restantes sont supprimées automatiquement
-    // grâce aux std::unique_ptr
     Engine::~Engine() {}
 
-    // Donne accès à l'état actuel de la partie (référence : pas de copie)
     state::GameState& Engine::getState() {
         return currentState;
     }
@@ -38,7 +35,7 @@ namespace engine {
     }
 
     // Position (0, 1, 2…) du joueur dont c'est le tour dans la liste des joueurs
-    int Engine::getCurrentPlayerIndex() {
+    int Engine::getCurrentPlayerIndex() const {
         std::vector<state::Player*> players = currentState.getPlayers();
         for (int i = 0; i < (int) players.size(); i++) {
             if (players[i] == currentState.getCurrentPlayer())
