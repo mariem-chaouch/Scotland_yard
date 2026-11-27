@@ -1,3 +1,5 @@
+#define BOOST_TEST_MODULE PlayersTest
+#define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
 #include <memory>
@@ -23,6 +25,7 @@ BOOST_AUTO_TEST_CASE(TestPlayerSetters)
   d.setCurrentStationId(13);
   BOOST_CHECK_EQUAL(d.getColor(), "bleu");
   BOOST_CHECK_EQUAL(d.getCurrentStationId(), 13);
+  BOOST_CHECK_EQUAL(d.getCurrentStationId(), 13);
 }
 
 BOOST_AUTO_TEST_CASE(TestPlayerMakeMove)
@@ -31,7 +34,6 @@ BOOST_AUTO_TEST_CASE(TestPlayerMakeMove)
   BOOST_CHECK(d.makeMove(14, TaxiTicket));
   BOOST_CHECK_EQUAL(d.getCurrentStationId(), 14);
 }
-
 
 // ---------- Detective ----------
 
@@ -138,4 +140,28 @@ BOOST_AUTO_TEST_CASE(TestPolymorphismThroughPlayerPointer)
   BOOST_CHECK(!x->hasTicket(BlackTicket));        // prouve que MrX::useTransportTicket a été appelé
 }
 
-/* vim: set sw=2 sts=2 et : */
+BOOST_AUTO_TEST_CASE(TestDetectiveBusAndBlackTickets)
+{
+  Detective d("vert");
+  for (int i = 0; i < 8; i++) d.useTransportTicket(BusTicket);   // 8 tickets bus au départ
+  BOOST_CHECK(!d.hasTicket(BusTicket));
+  d.useTransportTicket(BusTicket);
+  BOOST_CHECK(!d.hasTicket(BusTicket));
+
+  d.useTransportTicket(BlackTicket);       // un détective ne peut pas l'utiliser : rien ne change
+  BOOST_CHECK(d.hasTicket(TaxiTicket));
+  BOOST_CHECK(d.hasTicket(TrainTicket));
+}
+
+BOOST_AUTO_TEST_CASE(TestDetectiveUsesAllTaxiTickets)
+{
+  Detective d("vert");
+  for (int i = 0; i < 11; ++i) {
+    BOOST_REQUIRE(d.hasTicket(TaxiTicket));
+    d.useTransportTicket(TaxiTicket);
+  }
+
+  BOOST_CHECK(!d.hasTicket(TaxiTicket));
+  d.useTransportTicket(TaxiTicket);
+  BOOST_CHECK(!d.hasTicket(TaxiTicket));
+}

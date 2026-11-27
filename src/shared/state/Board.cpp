@@ -11,29 +11,49 @@
 
 using namespace state;
 
-Board::Board ( )
+namespace {
+
+std::vector<Point> readStationPositions(const std::string& path)
 {
-    std::ifstream pos_file(std::string(RESOURCE_DIR) + "/pos.txt");
+    std::ifstream pos_file(path);
 
     if (!pos_file.is_open()) {
-        throw std::runtime_error("Cannot open ../resources/pos.txt");
+        throw std::runtime_error("Cannot open " + path);
     }
 
-    int station_nbr, id;
-    float x, y;
-    pos_file >> station_nbr;
-    for (int i = 0; i < station_nbr; i++) {
-        pos_file >> id;
-        pos_file >> x;
-        pos_file >> y;
-        std::cout << id << "\t" << x << "\t" << y << std::endl;
-        addStation(Station(id, {.x = x, .y = y}));
-        //std::cout << x<< "\t" << y << std::endl;
+    int stationCount;
+    if (!(pos_file >> stationCount) || stationCount < 0) {
+        throw std::runtime_error("Invalid station count in " + path);
     }
 
-    pos_file.close();
+    std::vector<Point> positions;
+    for (int i = 0; i < stationCount; ++i) {
+        int id;
+        Point position;
+        if (!(pos_file >> id >> position.x >> position.y)) {
+            throw std::runtime_error("Invalid station coordinates in " + path);
+        }
+        if (id != i + 1) {
+            throw std::runtime_error("Unexpected station ID " + std::to_string(id) + " in " + path);
+        }
+        positions.push_back(position);
+    }
+    return positions;
+}
 
-    int connection_nbr, station1, station2;
+} // namespace
+
+Board::Board ( )
+{
+    const std::vector<Point> positions = readStationPositions(std::string(RESOURCE_DIR) + "/pos.txt");
+    int id = 1;
+    for (const Point& position : positions) {
+        std::cout << id << "\t" << position.x << "\t" << position.y << std::endl;
+        addStation(Station(id, position));
+        ++id;
+    }
+
+    int station_nbr, connection_nbr, station1, station2;
     std::string mean;
     Transport transport;
 

@@ -1,7 +1,10 @@
 #include "Scene.h"
 
+#include <iostream>
+
 #include "BoardLayer.h"
 #include "InfoLayer.h"
+#include "MainMenuLayer.h"
 #include "PlayersLayer.h"
 
 namespace render {
@@ -13,9 +16,10 @@ namespace render {
         //window.setFramerateLimit(60);
         auto boardLayer = std::make_unique<BoardLayer>(gameState.getBoard());
         BoardLayer* boardLayerPtr = boardLayer.get();
-        layers.push_back(std::move(boardLayer));
+        layers.push_back(std::make_unique<MainMenuLayer>());
+        /*layers.push_back(std::move(boardLayer));
         layers.push_back(std::make_unique<PlayersLayer>(gameState, *boardLayerPtr));
-        layers.push_back(std::make_unique<InfoLayer>());
+        layers.push_back(std::make_unique<InfoLayer>(gameState));*/
     }
 
     void Scene::initScene()
@@ -70,8 +74,7 @@ namespace render {
                     window.setView(sf::View(visibleArea));
                 }
 
-                if (event.type == sf::Event::MouseButtonPressed &&
-                        event.mouseButton.button == sf::Mouse::Left)
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i pixelPosition(
                         event.mouseButton.x,
@@ -81,16 +84,71 @@ namespace render {
                     sf::Vector2f mouseWorld =
                         window.mapPixelToCoords(pixelPosition);
 
-                    // Temporarily display buttons at the click position
-                    auto* boardLayer = dynamic_cast<BoardLayer*>(layers[0].get());
+                    // Check if we are in the main menu
+                    auto* menuLayer = dynamic_cast<MainMenuLayer*>(layers[0].get());
 
-                    if (boardLayer)
+                    if (menuLayer)
                     {
-                        boardLayer->selectStationAt(mouseWorld);
+                        if (menuLayer->isStartButtonClicked(mouseWorld))
+                        {
+                            startGame();
+                        }
+                    }
+                    else
+                    {
+                        // We are in the game
+                        auto* boardLayer = dynamic_cast<BoardLayer*>(layers[0].get());
+
+                        if (boardLayer)
+                        {
+                            int transport = boardLayer->getTransportFromSelection(mouseWorld);
+
+                            if (transport != -1)
+                            {
+                                switch (transport)
+                                {
+                                    case 0:
+                                        std::cout << "Train selected!" << std::endl;
+                                        break;
+
+                                    case 1:
+                                        std::cout << "Bus selected!" << std::endl;
+                                        break;
+
+                                    case 2:
+                                        std::cout << "Taxi selected!" << std::endl;
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                boardLayer->selectStationAt(mouseWorld);
+                            }
+                        }
                     }
                 }
             }
             drawScene();
         }
+    }
+
+    void Scene::startGame()
+    {
+        layers.clear();
+
+        auto boardLayer = std::make_unique<BoardLayer>(gameState.getBoard());
+        BoardLayer* boardLayerPtr = boardLayer.get();
+
+        layers.push_back(std::move(boardLayer));
+
+        layers.push_back(
+            std::make_unique<PlayersLayer>(gameState, *boardLayerPtr)
+        );
+
+        layers.push_back(
+            std::make_unique<InfoLayer>(gameState)
+        );
+
+        initScene();
     }
 }

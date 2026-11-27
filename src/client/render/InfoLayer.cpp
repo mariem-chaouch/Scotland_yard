@@ -2,11 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "state/MrX.h"
+
 namespace render {
 
-    InfoLayer::InfoLayer()
-    {
-    }
+    InfoLayer::InfoLayer(const state::GameState& gameState):gameState(gameState){}
 
     static sf::Font font;
 
@@ -83,9 +83,57 @@ namespace render {
         const float spriteSize = 45.f;
         const float spriteSpacing = 15.f;
 
+        /*std::vector<std::pair<int, state::Ticket>> history;
+        for (auto * player: gameState.getPlayers())
+        {
+            if (auto* mrX = dynamic_cast<state::MrX*>(player))
+            {
+                history = mrX->getHistory();
+                break;
+            }
+        }*/
+        // Temporary history for rendering tests
+        static const std::vector<std::pair<int, state::Ticket>> history = {
+            {15, state::Ticket::TaxiTicket},
+            {23, state::Ticket::BusTicket},
+            {45, state::Ticket::TrainTicket},
+            {67, state::Ticket::BlackTicket},
+            {89, state::Ticket::TaxiTicket},
+            {102, state::Ticket::BusTicket},
+            {120, state::Ticket::BlackTicket},
+            {145, state::Ticket::TrainTicket}
+        };
         for (int i = 0; i < 24; ++i)
         {
-            const sf::Vector2u textureSize = textures[0]->getSize();
+            std::size_t textureIndex = 0;
+
+            if (static_cast<std::size_t>(i) < history.size())
+            {
+                switch (history[i].second)
+                {
+                case state::Ticket::TaxiTicket:
+                    textureIndex = 1;
+                    break;
+
+                case state::Ticket::BusTicket:
+                    textureIndex = 2;
+                    break;
+
+                case state::Ticket::TrainTicket:
+                    textureIndex = 3;
+                    break;
+
+                case state::Ticket::BlackTicket:
+                    textureIndex = 4;
+                    break;
+                }
+            }
+            // Update the texture only if it has changed
+            if (sprites[i].getTexture() != textures[textureIndex].get())
+            {
+                sprites[i].setTexture(*textures[textureIndex], true);
+            }
+            const sf::Vector2u textureSize = sprites[i].getTexture()->getSize();
 
             const float scale = spriteSize / std::max(textureSize.x, textureSize.y);
 

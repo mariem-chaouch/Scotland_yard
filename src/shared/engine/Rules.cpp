@@ -45,7 +45,7 @@ bool Rules::isLegalMove(state::GameState& game, int playerId,
     }
 
     state::Player* player = players[playerId];
-    if (!player->hasTicket(ticket)) {
+    if (!(player->getNbOfTickets(ticket)>0)) {
         return false;
     }
 

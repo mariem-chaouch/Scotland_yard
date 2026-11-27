@@ -239,7 +239,6 @@ namespace render {
                 if (distance <= RADIUS)
                 {
                     showSelectionAt({x, y});
-                    std::cout << "Station selected: " << id << std::endl;
                     return true;
                 }
             }
@@ -251,5 +250,42 @@ namespace render {
 
         hideSelection();
         return false;
+    }
+
+    int BoardLayer::getTransportFromSelection(sf::Vector2f clickPosition)
+    {
+        if (!showSelection)
+            return -1;
+
+        const float buttonSize = 120.f;
+        const float radius = buttonSize / 2.f;
+
+        float dx = clickPosition.x - selectionPosition.x;
+        float dy = clickPosition.y - selectionPosition.y;
+
+        // Check if the click is inside the wheel
+        float distance = std::sqrt(dx * dx + dy * dy);
+
+        if (distance > radius)
+            return -1;
+
+        // Calculate angle in degrees
+        float angle = (std::atan2(dy, dx) * 180.f / 3.14159265f) + 90 ;
+
+        // Convert negative angles to [0, 360)
+        if (angle < 0)
+            angle += 360.f;
+
+        hideSelection();
+
+        // Determine the selected transport
+        if (angle >= 0.f && angle < 120.f)
+            return 0; // Taxi
+
+        if (angle >= 120.f && angle < 240.f)
+            return 1; // Train
+
+        return 2; // Bus
+
     }
 }

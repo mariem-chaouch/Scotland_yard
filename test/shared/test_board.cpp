@@ -1,80 +1,63 @@
 #include <boost/test/unit_test.hpp>
 
+#include <algorithm>
+#include <stdexcept>
+
 #include "../../src/shared/state/Board.h"
 #include "../../src/shared/state/Station.h"
 #include "../../src/shared/state/Connection.h"
 
 using namespace state;
 
-BOOST_AUTO_TEST_CASE(TestBoardConstruction)
-{
-    Board board;
-
-    // The constructor should load the stations and connections
-    // from the resource files without throwing an exception.
-    BOOST_CHECK(true);
-}
-
 BOOST_AUTO_TEST_CASE(TestBoardStations)
 {
     Board board;
+    const Board& constBoard = board;
 
-    // Check that a station can be retrieved by its ID.
-    const Station& station = board.getStation(1);
-
+    Station& station = board.getStation(1);
     BOOST_CHECK_EQUAL(station.getId(), 1);
+    BOOST_CHECK_EQUAL(constBoard.getStation(1).getId(), 1);
 
-    try {
-        // Check that try to retrieve a non existent station throws an exception.
-        const Station& station = board.getStation(300);
-
-    }catch (std::exception& e) {}
-
-    try {
-        // Check that existent stations can not be added
-        board.addStation(station);
-    }catch (std::exception& e) {}
+    BOOST_CHECK_THROW(board.getStation(300), std::invalid_argument);
+    BOOST_CHECK_THROW(constBoard.getStation(300), std::invalid_argument);
+    BOOST_CHECK_THROW(board.addStation(station), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(TestBoardConnections)
 {
     Board board;
+    constexpr int missingStation = 300;
 
-    // Replace these IDs with two stations connected in graph.txt.
-    const int station1 = 1;
-    const int station2 = 9;
-    const int station3 = 300;
+    BOOST_CHECK(board.areConnected(1, 9));
+    BOOST_CHECK(board.areConnected(9, 1));
 
-    BOOST_CHECK(board.areConnected(station1, station2));
-    BOOST_CHECK(board.areConnected(station2, station1));
-    BOOST_CHECK(!board.areConnected(station1, station3));
-
-    try {
-        board.addConnection(station1, station3, Connection(Train));
-    }catch (std::exception& e) {}
+    BOOST_CHECK(!board.areConnected(1, missingStation));
+    BOOST_CHECK(!board.areConnected(missingStation, 1));
+    BOOST_CHECK_THROW(board.addConnection(1, missingStation, Connection(Train)), std::invalid_argument);
+    BOOST_CHECK_THROW(board.addConnection(missingStation, 1, Connection(Train)), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(TestBoardNeighbors)
 {
     Board board;
 
-    // Replace these IDs with a station and its known neighbor
-    // from graph.txt.
-    const int stationId = 1;
-    const int neighborId = 9;
+    const auto neighbors = board.getNeighbors(1);
+    BOOST_CHECK(std::find(neighbors.begin(), neighbors.end(), 9) != neighbors.end());
+    BOOST_CHECK_THROW(board.getNeighbors(300), std::out_of_range);
+}
 
-    std::vector<int> neighbors = board.getNeighbors(stationId);
+BOOST_AUTO_TEST_CASE(TestConnectingAnIsolatedStation)
+{
+    Board board;
+    constexpr int newStation = 300;
 
-    //test exception
+    board.addStation(Station(newStation, Point{0, 0}));
+    BOOST_CHECK(board.getNeighbors(newStation).empty());
+    BOOST_CHECK(!board.areConnected(newStation, 1));
 
-
-    BOOST_CHECK(
-        std::find(neighbors.begin(), neighbors.end(), neighborId)
-        != neighbors.end()
-    );
-
-    const int StationIdNotFound = 300;
-    try {
-        std::vector<int> neighborsNotFound = board.getNeighbors(StationIdNotFound);
-    }catch (std::exception& e) {}
+    board.addConnection(newStation, 1, Connection(Train));
+    BOOST_CHECK(board.areConnected(newStation, 1));
+    const auto neighbors = board.getNeighbors(newStation);
+    BOOST_REQUIRE_EQUAL(neighbors.size(), 1);
+    BOOST_CHECK_EQUAL(neighbors.front(), 1);
 }

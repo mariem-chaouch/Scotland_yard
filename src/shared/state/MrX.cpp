@@ -12,17 +12,17 @@ namespace state {
         if (nb_double_tickets > 0) nb_double_tickets--;
     }
 
-    bool MrX::hasTicket(Ticket ticket) const {
-        return (ticket != BlackTicket) || (nb_black_tickets > 0);
+    int MrX::getNbOfTickets(Ticket ticket)
+    {
+        if  (ticket == BlackTicket) return nb_black_tickets;
+        return -1;
     }
 
-    bool MrX::hasDoubleTicket() const {
+    bool MrX::hasDoubleTicket() const{
         return nb_double_tickets > 0;
     }
 
-    // Chaque déplacement est noté : (station d'arrivée, ticket utilisé).
-    // Les détectives ne verront que le ticket ; la station reste cachée.
-    // Mister X prend taxi/bus/métro dans la pioche commune : seul le Black Ticket se décompte.
+    // Mister X prend taxi/bus/métro dans la pioche commune : seul le Black Ticket se décompte
     void MrX::useTransportTicket(Ticket ticket) {
         history.push_back({currentStationId, ticket});
         if (ticket == BlackTicket && nb_black_tickets > 0) nb_black_tickets--;
