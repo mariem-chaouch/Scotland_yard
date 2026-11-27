@@ -8,12 +8,14 @@ namespace state {
     Detective::Detective(std::string color)
         : Player(color), nb_taxi(11), nb_bus(8), nb_train(4) {}
 
-    bool Detective::hasTicket(Ticket ticket) {
-        switch (ticket) {
-            case TaxiTicket:  return nb_taxi > 0;
-            case BusTicket:   return nb_bus > 0;
-            case TrainTicket: return nb_train > 0;
-            default:          return false;   // un détective n'a pas de Black Ticket
+    int Detective::getNbOfTickets(Ticket ticket)
+    {
+        switch (ticket)
+        {
+            case TaxiTicket: return nb_taxi;
+            case BusTicket: return nb_bus;
+            case TrainTicket: return nb_train;
+            default:  return -1;
         }
     }
 
