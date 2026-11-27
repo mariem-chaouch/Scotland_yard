@@ -45,11 +45,7 @@ namespace render {
             sprites.emplace_back(*textures[0]);
         }
 
-        //Ticket counters
-        sprites.emplace_back(*textures[1]);
-        sprites.emplace_back(*textures[2]);
-        sprites.emplace_back(*textures[3]);
-        sprites.emplace_back(*textures[4]);
+
 
         if (!font.loadFromFile(RESOURCE_DIR "/arial.ttf"))
             throw std::runtime_error("Failed to load font");
@@ -59,13 +55,15 @@ namespace render {
         {
             int nbTicket = currentplayer->getNbOfTickets(static_cast<state::Ticket>(i));
             if (nbTicket != -1) {
+                //Ticket counters
+                sprites.emplace_back(*textures[1+i]);
                 texts.emplace_back(std::to_string(nbTicket), font, 22);
                 texts.back().setFillColor(sf::Color::White);
             }
         }
     }
 
-    void InfoLayer::    draw(sf::RenderTarget& target)
+    void InfoLayer::draw(sf::RenderTarget& target)
     {
         const sf::Vector2u windowSize = target.getSize();
 
