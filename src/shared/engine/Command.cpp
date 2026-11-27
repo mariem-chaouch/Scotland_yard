@@ -18,8 +18,8 @@ int Command::getPlayerId() const {
     return playerId;
 }
 
-void Command::setPlayerId(int playerId) {
-    this->playerId = playerId;
+void Command::setPlayerId(int newPlayerId) {
+    playerId = newPlayerId;
 }
 
 }
