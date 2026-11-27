@@ -19,7 +19,7 @@ namespace render {
         layers.push_back(std::make_unique<MainMenuLayer>());
         /*layers.push_back(std::move(boardLayer));
         layers.push_back(std::make_unique<PlayersLayer>(gameState, *boardLayerPtr));
-        layers.push_back(std::make_unique<InfoLayer>(gameState));
+        layers.push_back(std::make_unique<InfoLayer>(gameState));*/
     }
 
     void Scene::initScene()
@@ -108,15 +108,15 @@ namespace render {
                                 switch (transport)
                                 {
                                     case 0:
-                                        std::cout << "Taxi selected!" << std::endl;
-                                        break;
-
-                                    case 1:
                                         std::cout << "Train selected!" << std::endl;
                                         break;
 
-                                    case 2:
+                                    case 1:
                                         std::cout << "Bus selected!" << std::endl;
+                                        break;
+
+                                    case 2:
+                                        std::cout << "Taxi selected!" << std::endl;
                                         break;
                                 }
                             }
@@ -146,7 +146,7 @@ namespace render {
         );
 
         layers.push_back(
-            std::make_unique<InfoLayer>()
+            std::make_unique<InfoLayer>(gameState)
         );
 
         initScene();

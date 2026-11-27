@@ -272,7 +272,6 @@ namespace render {
         // Calculate angle in degrees
         float angle = (std::atan2(dy, dx) * 180.f / 3.14159265f) + 90 ;
 
-
         // Convert negative angles to [0, 360)
         if (angle < 0)
             angle += 360.f;

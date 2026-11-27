@@ -21,11 +21,6 @@ namespace state {
         return true;
     }
 
-    // Version de base : ne fait rien. MrX et Detective la redéfinissent.
-    void Player::useTransportTicket(Ticket ticket) {
-        (void)ticket;
-    }
-
     // Setters générés par dia2code
     void Player::setColor(const std::string& color) {
         this->color = color;
@@ -34,5 +29,4 @@ namespace state {
     void Player::setCurrentStationId(int currentStationId) {
         this->currentStationId = currentStationId;
     }
-
 }
