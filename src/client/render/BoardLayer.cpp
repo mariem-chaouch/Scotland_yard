@@ -33,10 +33,6 @@ namespace render {
         }
         sf::Vector2u size = textures.back()->getSize();
 
-        std::cout << "Map size: "
-                << size.x << " x " << size.y
-                << std::endl;
-
         sprites.emplace_back(*textures[0]);
 
         //Selection Buttons
@@ -144,35 +140,6 @@ namespace render {
                 ++stationsMissing;
             }
         }
-
-        // ========================================
-        // TEST 3 : diagnostic dans le terminal
-        // Affichage une seule fois
-        // ========================================
-
-        static bool diagnosticPrinted = false;
-
-        if (!diagnosticPrinted)
-        {
-            std::cout << "===== TEST STATIONS =====" << std::endl;
-
-            std::cout << "Stations trouvees : "
-                      << stationsFound << std::endl;
-
-            std::cout << "Stations absentes : "
-                      << stationsMissing << std::endl;
-
-            std::cout << "Map bounds : "
-                      << bounds.left << ", "
-                      << bounds.top << " / "
-                      << bounds.width << " x "
-                      << bounds.height << std::endl;
-
-            std::cout << "=========================" << std::endl;
-
-            diagnosticPrinted = true;
-        }
-
 
         if (showSelection)
         {

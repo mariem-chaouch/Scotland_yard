@@ -1,5 +1,6 @@
 #include "InfoLayer.h"
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 
 #include "state/MrX.h"
@@ -53,14 +54,18 @@ namespace render {
         if (!font.loadFromFile(RESOURCE_DIR "/arial.ttf"))
             throw std::runtime_error("Failed to load font");
 
+        state::Player* currentplayer = gameState.getCurrentPlayer();
         for (int i = 0; i < 4; ++i)
         {
-            texts.emplace_back("0", font, 22);
-            texts.back().setFillColor(sf::Color::White);
+            int nbTicket = currentplayer->getNbOfTickets(static_cast<state::Ticket>(i));
+            if (nbTicket != -1) {
+                texts.emplace_back(std::to_string(nbTicket), font, 22);
+                texts.back().setFillColor(sf::Color::White);
+            }
         }
     }
 
-    void InfoLayer::draw(sf::RenderTarget& target)
+    void InfoLayer::    draw(sf::RenderTarget& target)
     {
         const sf::Vector2u windowSize = target.getSize();
 
@@ -152,7 +157,7 @@ namespace render {
         const float spacing = 55.f;
 
 
-        for (std::size_t i = 0; i < 4; ++i)
+        for (std::size_t i = 0; i < texts.size(); ++i)
         {
             const sf::Vector2u textureSize = textures[i + 1]->getSize();
 
