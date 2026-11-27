@@ -19,7 +19,7 @@ namespace render {
         layers.push_back(std::make_unique<MainMenuLayer>());
         /*layers.push_back(std::move(boardLayer));
         layers.push_back(std::make_unique<PlayersLayer>(gameState, *boardLayerPtr));
-        layers.push_back(std::make_unique<InfoLayer>());*/
+        layers.push_back(std::make_unique<InfoLayer>(gameState));*/
     }
 
     void Scene::initScene()
@@ -146,7 +146,7 @@ namespace render {
         );
 
         layers.push_back(
-            std::make_unique<InfoLayer>()
+            std::make_unique<InfoLayer>(gameState)
         );
 
         initScene();

@@ -239,7 +239,6 @@ namespace render {
                 if (distance <= RADIUS)
                 {
                     showSelectionAt({x, y});
-                    std::cout << "Station selected: " << id << std::endl;
                     return true;
                 }
             }
@@ -271,7 +270,7 @@ namespace render {
             return -1;
 
         // Calculate angle in degrees
-        float angle = std::atan2(dy, dx) * 180.f / 3.14159265f;
+        float angle = (std::atan2(dy, dx) * 180.f / 3.14159265f) + 90 ;
 
         // Convert negative angles to [0, 360)
         if (angle < 0)

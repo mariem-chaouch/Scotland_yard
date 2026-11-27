@@ -12,8 +12,10 @@ namespace state {
         if (nb_double_tickets > 0) nb_double_tickets--;
     }
 
-    bool MrX::hasBlackTicket() {
-        return nb_black_tickets > 0;
+    int MrX::getNbOfTickets(Ticket ticket)
+    {
+        if  (ticket == BlackTicket) return nb_black_tickets;
+        return -1;
     }
 
     bool MrX::hasDoubleTicket() {
@@ -24,5 +26,8 @@ namespace state {
     void MrX::useTransportTicket(Ticket ticket) {
         if (ticket == BlackTicket && nb_black_tickets > 0) nb_black_tickets--;
     }
-
+    std::vector<std::pair<int, Ticket>> MrX::getHistory ()
+    {
+        return history;
+    }
 }
