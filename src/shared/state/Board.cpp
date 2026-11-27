@@ -48,7 +48,6 @@ Board::Board ( )
     const std::vector<Point> positions = readStationPositions(std::string(RESOURCE_DIR) + "/pos.txt");
     int id = 1;
     for (const Point& position : positions) {
-        std::cout << id << "\t" << position.x << "\t" << position.y << std::endl;
         addStation(Station(id, position));
         ++id;
     }
@@ -84,12 +83,10 @@ Board::Board ( )
         }
 
         addConnection(station1, station2, Connection(transport));
-        std::cout << station1<< "\t" << station2 << "\t" << mean<< std::endl;
     }
 
     graph_file.close();
 }
-
 Board::~Board () = default;
 
 std::vector<int> Board::getNeighbors (int stationId)
