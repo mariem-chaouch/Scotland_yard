@@ -35,9 +35,22 @@ static string playerName(int i) {
     return (i == 0) ? "Mister X" : "Detective " + to_string(i);
 }
 // Mode "render" : la fenêtre graphique (travail d'Adam)
-static void runRender() {
-    GameState gameState;
-    Scene scene(gameState);
+// Mode "render" : tour 0 avec le moteur, puis affichage
+static void runRender(unsigned int seed) {
+    cout << "Seed utilisé : " << seed << endl;
+
+    engine::Engine engine;
+    engine.init();
+
+    int nbPlayers = (int) engine.getState().getPlayers().size();
+    vector<int> starts = engine::Rules::drawStartStations(nbPlayers, seed);
+    for (int i = 0; i < nbPlayers; i++) {
+        engine.addCommand(make_unique<engine::StartCommand>(i, starts[i]));
+        engine.update();
+        cout << playerName(i) << " commence en " << starts[i] << endl;
+    }
+
+    Scene scene(engine.getState());   // l'affichage lit l'état du moteur
     scene.runScene();
 }
 // Mode "board" : l'ancien test du plateau
@@ -133,7 +146,8 @@ int main(int argc, char* argv[])
     } else if (mode == "board") {
         runBoardDemo();
     } else {
-        runRender();                       // par défaut : la fenêtre graphique
+        unsigned int seed = (argc >= 3) ? stoul(argv[2]) : random_device{}();
+        runRender(seed);
     }
     return 0;
 }
